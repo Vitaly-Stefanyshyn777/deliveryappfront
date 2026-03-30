@@ -20,14 +20,14 @@
 
 @media (max-width: 1024px) {
   .frame {
-    border-radius: 14px;
+    border-radius: vw(14);
   }
 
   .popupText {
-    font-size: 3.4vw;
+    font-size: vw(14);
   }
 
   .popupAddress {
-    font-size: 3vw;
+    font-size: vw(12);
   }
 }

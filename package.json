@@ -29,7 +29,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
-    "postcss-px-to-viewport-8-plugin": "^1.2.5",
+    "postcss-functions": "^4.0.2",
+    "postcss-px-to-viewport-8-media-screen": "^1.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

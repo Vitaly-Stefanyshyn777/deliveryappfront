@@ -7,9 +7,9 @@ import {
   ProductFilters,
   Coupon,
 } from "@/types";
+import { BACKEND_BASE_URL } from "@/lib/env";
 
-const API_BASE_URL =
-  "https://flowerdeliverybackend-production.up.railway.app/api/v1";
+const API_BASE_URL = BACKEND_BASE_URL ? `${BACKEND_BASE_URL}/api/v1` : "";
 
 class ApiClient {
   private baseUrl: string;
@@ -22,6 +22,11 @@ class ApiClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
+    if (!this.baseUrl) {
+      throw new Error(
+        "BACKEND URL is not configured. Set NEXT_PUBLIC_BACKEND_URL in .env (or NEXT_PUBLIC_BACKEND_UR as fallback)."
+      );
+    }
     const url = `${this.baseUrl}${endpoint}`;
 
     const config: RequestInit = {

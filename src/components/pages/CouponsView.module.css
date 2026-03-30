@@ -3,8 +3,9 @@
 }
 
 .container {
-  width: min(1200px, calc(100% - 24px));
+  width: 1200px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .page {
@@ -22,7 +23,7 @@
 
 .title {
   margin: 0 0 8px;
-  font-size: 7vw;
+  font-size: 48px;
   line-height: 1.05;
   font-weight: 800;
   color: #111827;
@@ -109,19 +110,73 @@
 }
 
 @media (min-width: 1024px) {
-  .container {
-    width: min(1200px, calc(100% - 48px));
-  }
-
   .page {
     padding: 32px 0 80px;
   }
 
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    width: 100%;
+    padding: 0 vw(16);
+  }
+
+  .page {
+    padding: vw(24) 0 vw(64);
+  }
+
+  .heroCard {
+    padding: vw(24) vw(16);
+    margin-bottom: vw(16);
+    border-radius: vw(20);
+  }
+
   .title {
-    font-size: 48px;
+    font-size: vw(34);
+  }
+
+  .subtitle {
+    font-size: vw(15);
+  }
+
+  .stateCard {
+    padding: vw(16);
+    margin-bottom: vw(16);
+    border-radius: vw(20);
   }
 
   .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: vw(16);
+  }
+
+  .couponCard {
+    border-radius: vw(20);
+  }
+
+  .imageWrap {
+    height: vw(140);
+  }
+
+  .body {
+    padding: vw(16);
+  }
+
+  .description {
+    font-size: vw(13);
+  }
+
+  .button {
+    padding: vw(12) vw(14);
+    font-size: vw(13);
   }
 }

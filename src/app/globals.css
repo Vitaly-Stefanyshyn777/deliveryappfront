@@ -15,6 +15,7 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 * {
@@ -30,6 +31,10 @@ body {
     var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {

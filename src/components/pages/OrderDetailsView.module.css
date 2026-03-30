@@ -3,8 +3,9 @@
 }
 
 .container {
-  width: min(1200px, calc(100% - 24px));
+  width: 1200px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .page {
@@ -55,11 +56,46 @@
 }
 
 @media (min-width: 1024px) {
+  .page {
+    padding: 32px 0 80px;
+  }
+}
+
+@media (max-width: 1200px) {
   .container {
-    width: min(1200px, calc(100% - 48px));
+    width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    width: 100%;
+    padding: 0 vw(16);
   }
 
   .page {
-    padding: 32px 0 80px;
+    padding: vw(24) 0 vw(64);
+  }
+
+  .stateCard {
+    border-radius: vw(20);
+    min-height: vw(220);
+  }
+
+  .loaderIcon {
+    width: vw(32);
+    height: vw(32);
+    margin-bottom: vw(12);
+  }
+
+  .errorIcon,
+  .emptyIcon {
+    width: vw(44);
+    height: vw(44);
+    margin-bottom: vw(12);
+  }
+
+  .stateText {
+    font-size: vw(15);
   }
 }

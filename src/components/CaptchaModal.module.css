@@ -15,12 +15,40 @@
 
 .modal {
   position: relative;
-  width: min(100%, 420px);
+  width: 420px;
   margin: 0 16px;
   padding: 16px;
   border-radius: 20px;
   background: #fff;
   box-shadow: 0 25px 80px rgba(15, 23, 42, 0.24);
+}
+
+@media (max-width: 420px) {
+  .modal {
+    width: 100%;
+    margin: 0 vw(16);
+    padding: vw(16);
+    border-radius: vw(20);
+  }
+
+  .title {
+    font-size: vw(18);
+  }
+
+  .text {
+    font-size: vw(14);
+  }
+
+  .input {
+    padding: vw(10) vw(12);
+    border-radius: vw(14);
+  }
+
+  .button {
+    padding: vw(8) vw(12);
+    border-radius: vw(14);
+    font-size: vw(14);
+  }
 }
 
 .header {
