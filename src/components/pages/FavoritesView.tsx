@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Heart, Loader2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ProductCard } from "@/components/ProductCard";
 import { useFavoritesStore } from "@/stores/favoritesStore";
 import { useProducts } from "@/hooks/useProducts";
-import { Heart, Loader2 } from "lucide-react";
 import { Product } from "@/types";
+import styles from "./FavoritesView.module.css";
 
 export function FavoritesView() {
   const { favoriteIds } = useFavoritesStore();
@@ -28,14 +29,12 @@ export function FavoritesView() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className={styles.root}>
         <Header />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex justify-center items-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
-            <span className="ml-2 text-gray-600">
-              Завантаження улюблених...
-            </span>
+        <div className={`${styles.container} ${styles.page}`}>
+          <div className={styles.results}>
+            <Loader2 className={styles.spinner} />
+            <span className={styles.subtitle}>Завантаження улюблених...</span>
           </div>
         </div>
       </div>
@@ -43,45 +42,36 @@ export function FavoritesView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={styles.root}>
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-4">
-          <Breadcrumbs
-            items={[{ label: "Головна", href: "/" }, { label: "Улюблені" }]}
-          />
+      <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.breadcrumb}>
+          <Breadcrumbs items={[{ label: "Головна", href: "/" }, { label: "Улюблені" }]} />
         </div>
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Мої улюблені квіти
-          </h1>
-          <p className="text-gray-600">Квіти, які ви додали до улюблених</p>
+        <div className={styles.headingBlock}>
+          <h1 className={styles.title}>Мої улюблені страви</h1>
+          <p className={styles.subtitle}>Позиції, які ви додали до улюблених</p>
         </div>
 
         {favoriteProducts.length === 0 ? (
-          <div className="text-center py-12">
-            <Heart className="h-24 w-24 text-gray-300 mx-auto mb-6" />
-            <h2 className="text-2xl font-bold text-gray-800 mb-3">
-              Улюблених квітів поки немає
-            </h2>
-            <p className="text-gray-600 mb-8">
-              Додайте квіти до улюблених, натиснувши на сердечко в каталозі.
+          <div className={styles.emptyCard}>
+            <Heart className={styles.emptyIcon} />
+            <h2 className={styles.emptyTitle}>Улюблених позицій поки немає</h2>
+            <p className={styles.emptyText}>
+              Додайте страви до улюблених, натиснувши на сердечко в каталозі.
             </p>
-            <a
-              href="/shop"
-              className="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition-colors"
-            >
-              Перейти до магазину
+            <a href="/shop" className={styles.button}>
+              Перейти до меню
             </a>
           </div>
         ) : (
           <>
-            <div className="mb-6">
-              <p className="text-gray-600">
-                Знайдено {favoriteProducts.length} улюблених квітів
+            <div className={styles.results}>
+              <p className={styles.subtitle}>
+                Знайдено {favoriteProducts.length} улюблених позицій
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className={styles.grid}>
               {favoriteProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

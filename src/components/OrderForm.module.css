@@ -1,0 +1,79 @@
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.group {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: #9ca3af;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 16px;
+  background: #fff;
+  color: #111827;
+}
+
+.input {
+  padding: 14px 16px 14px 40px;
+}
+
+.textarea {
+  min-height: 96px;
+  padding: 14px 16px 14px 40px;
+  resize: none;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: rgba(249, 115, 22, 0.55);
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
+}
+
+.error {
+  font-size: 14px;
+  color: #dc2626;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 9999px;
+  background: #f97316;
+  color: #fff;
+  font-weight: 700;
+}
+
+.submitButtonDisabled {
+  opacity: 0.5;
+}

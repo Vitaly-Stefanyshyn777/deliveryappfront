@@ -3,55 +3,50 @@
 import Image from "next/image";
 import { Header } from "@/components/Header";
 import { useActiveCoupons } from "@/hooks/useCoupons";
+import styles from "./CouponsView.module.css";
 
 export function CouponsView() {
   const { data, isLoading, error } = useActiveCoupons();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={styles.root}>
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          Активні купони
-        </h1>
+      <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.heroCard}>
+          <h1 className={styles.title}>Активні купони</h1>
+          <p className={styles.subtitle}>
+            Знижки для швидкого checkout у delivery app.
+          </p>
+        </div>
 
-        {isLoading && <div>Завантаження…</div>}
-        {error && (
-          <div className="text-red-600">Помилка завантаження купонів</div>
-        )}
+        {isLoading && <div className={styles.stateCard}>Завантаження…</div>}
+        {error && <div className={styles.stateCard}>Помилка завантаження купонів</div>}
         {!isLoading && !error && (!data || data.length === 0) && (
-          <div className="text-gray-500">Наразі активних купонів немає.</div>
+          <div className={styles.stateCard}>Наразі активних купонів немає.</div>
         )}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+        <div className={styles.grid}>
           {data?.map((c) => (
-            <div
-              key={c.code}
-              className="p-3 border rounded-lg flex flex-col bg-white text-gray-900"
-            >
+            <div key={c.code} className={styles.couponCard}>
               {c.imageUrl && (
-                <div className="relative w-full h-36 mb-3 overflow-hidden rounded">
-                  <Image
-                    src={c.imageUrl}
-                    alt={c.code}
-                    fill
-                    className="object-cover"
-                  />
+                <div className={styles.imageWrap}>
+                  <Image src={c.imageUrl} alt={c.code} fill className={styles.image} />
                 </div>
               )}
-              <div className="font-medium mb-1 text-gray-900">
-                {c.description || "Купон"} ({c.code})
-              </div>
-              <div className="text-sm text-gray-700 mb-3">
-                {c.discountPercent
-                  ? `Знижка ${c.discountPercent}%`
-                  : c.discountAmount
-                  ? `Знижка -${c.discountAmount} ₴`
-                  : ""}
-              </div>
-              <div className="mt-auto">
+              <div className={styles.body}>
+                <div className={styles.code}>
+                  {c.description || "Купон"} ({c.code})
+                </div>
+                <div className={styles.description}>
+                  {c.discountPercent
+                    ? `Знижка ${c.discountPercent}%`
+                    : c.discountAmount
+                    ? `Знижка -${c.discountAmount} ₴`
+                    : ""}
+                </div>
                 <button
                   type="button"
-                  className="px-3 py-2 border rounded-lg text-sm text-gray-900"
+                  className={styles.button}
                   onClick={async () => {
                     try {
                       await navigator.clipboard.writeText(c.code);

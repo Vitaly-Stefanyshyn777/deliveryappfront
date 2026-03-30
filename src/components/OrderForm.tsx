@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { Calendar, MapPin, Mail, Phone } from "lucide-react";
 import { OrderFormData } from "@/types";
 import { CaptchaModal } from "./CaptchaModal";
+import styles from "./OrderForm.module.css";
 
 interface OrderFormProps {
   onSubmit: (formData: OrderFormData) => void;
@@ -86,110 +87,102 @@ export function OrderForm({ onSubmit, isSubmitting }: OrderFormProps) {
   const [captchaOpen, setCaptchaOpen] = useState(false);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.field}>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-900 mb-1"
+          className={styles.fieldLabel}
         >
           Email
         </label>
-        <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <div className={styles.group}>
+          <Mail className={styles.icon} />
           <input
             type="email"
             id="email"
             value={formData.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
-            className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder-gray-900 ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            }`}
+            className={styles.input}
             placeholder="your@email.com"
           />
         </div>
         {errors.email && (
-          <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+          <p className={styles.error}>{errors.email}</p>
         )}
       </div>
 
-      <div>
+      <div className={styles.field}>
         <label
           htmlFor="phone"
-          className="block text-sm font-medium text-gray-900 mb-1"
+          className={styles.fieldLabel}
         >
           Телефон
         </label>
-        <div className="relative">
-          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <div className={styles.group}>
+          <Phone className={styles.icon} />
           <input
             type="tel"
             id="phone"
             value={formData.phone}
             onChange={(e) => handleInputChange("phone", e.target.value)}
-            className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder-gray-900 ${
-              errors.phone ? "border-red-500" : "border-gray-300"
-            }`}
+            className={styles.input}
             placeholder="+380 50 123 45 67"
           />
         </div>
         {errors.phone && (
-          <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+          <p className={styles.error}>{errors.phone}</p>
         )}
       </div>
 
-      <div>
+      <div className={styles.field}>
         <label
           htmlFor="deliveryAddr"
-          className="block text-sm font-medium text-gray-900 mb-1"
+          className={styles.fieldLabel}
         >
           Адреса доставки
         </label>
-        <div className="relative">
-          <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <div className={styles.group}>
+          <MapPin className={styles.icon} />
           <textarea
             id="deliveryAddr"
             value={formData.deliveryAddr}
             onChange={(e) => handleInputChange("deliveryAddr", e.target.value)}
-            className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none placeholder-gray-900 ${
-              errors.deliveryAddr ? "border-red-500" : "border-gray-300"
-            }`}
+            className={styles.textarea}
             rows={3}
             placeholder="вул. Хрещатик, 1, Київ"
           />
         </div>
         {errors.deliveryAddr && (
-          <p className="mt-1 text-sm text-red-600">{errors.deliveryAddr}</p>
+          <p className={styles.error}>{errors.deliveryAddr}</p>
         )}
       </div>
 
-      <div>
+      <div className={styles.field}>
         <label
           htmlFor="deliveryAt"
-          className="block text-sm font-medium text-gray-900 mb-1"
+          className={styles.fieldLabel}
         >
           Дата та час доставки
         </label>
-        <div className="relative">
-          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <div className={styles.group}>
+          <Calendar className={styles.icon} />
           <input
             type="datetime-local"
             id="deliveryAt"
             value={formData.deliveryAt}
             onChange={(e) => handleInputChange("deliveryAt", e.target.value)}
             min={minDate}
-            className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent placeholder-gray-900 ${
-              errors.deliveryAt ? "border-red-500" : "border-gray-300"
-            }`}
+            className={styles.input}
             placeholder="дд.мм.рррр, --:--"
           />
         </div>
         {errors.deliveryAt && (
-          <p className="mt-1 text-sm text-red-600">{errors.deliveryAt}</p>
+          <p className={styles.error}>{errors.deliveryAt}</p>
         )}
       </div>
 
-      <div className="flex items-center justify-between">
-        <label className="block text-sm font-medium text-gray-900">
+      <div className={styles.row}>
+        <label className={styles.fieldLabel}>
           Виберіть адресу на мапі (необов&apos;язково)
         </label>
         <ModalMapPicker
@@ -205,7 +198,9 @@ export function OrderForm({ onSubmit, isSubmitting }: OrderFormProps) {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-pink-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-pink-600 focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className={`${styles.submitButton} ${
+          isSubmitting ? styles.submitButtonDisabled : ""
+        }`}
       >
         {isSubmitting ? "Створюємо замовлення..." : "Оформити замовлення"}
       </button>

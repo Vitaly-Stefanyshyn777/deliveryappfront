@@ -1,20 +1,35 @@
-// Додаємо плагін для конвертації px -> vw (fluid viewport units)
-// Використовуємо postcss-px-to-viewport-8-plugin (сумісний з PostCSS 8)
-const config = {
-  plugins: [
-    "@tailwindcss/postcss",
-    [
-      "postcss-px-to-viewport-8-plugin",
-      {
-        viewportWidth: 1440, // базова ширина макета
-        unitPrecision: 5,
-        viewportUnit: "vw",
-        selectorBlackList: ["ignore-vw"], // додайте клас, щоб вимкнути конвертацію
-        minPixelValue: 2,
-        mediaQuery: false,
+export default {
+  plugins: {
+    "@tailwindcss/postcss": {},
+    "postcss-functions": {
+      functions: {
+        // Використовуємо тільки для мобільних стилів
+        vw: (value) => {
+          const px = parseFloat(String(value));
+          if (Number.isNaN(px)) return String(value);
+          return `${(px / 375) * 100}vw`;
+        },
       },
-    ],
-  ],
+    },
+    "postcss-px-to-viewport-8-media-screen": {
+      unitToConvert: "px",
+      viewportWidth: 1920, // база = десктоп
+      unitPrecision: 5,
+      propList: ["*"],
+      viewportUnit: "vw",
+      fontViewportUnit: "vw",
+      selectorBlackList: [".no-vw"],
+      minPixelValue: 1,
+      mediaQuery: true,
+      replace: true,
+      exclude: [/node_modules/],
+      include: [/(src|app|styles)/],
+      mediaScreen: {
+        "(max-width: 1024px)": 375,
+        "(max-width: 480px)": 375,
+        "(max-width: 430px)": 375,
+        "screen and (max-width: 430px)": 375,
+      },
+    },
+  },
 };
-
-export default config;

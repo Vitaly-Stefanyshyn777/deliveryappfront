@@ -1,0 +1,141 @@
+.root {
+  min-height: 100vh;
+}
+
+.container {
+  width: min(1200px, calc(100% - 24px));
+  margin: 0 auto;
+}
+
+.page {
+  padding: 24px 0 64px;
+}
+
+.headerCard {
+  padding: 24px;
+  margin-bottom: 24px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 7vw;
+  line-height: 1.05;
+  font-weight: 800;
+  color: #111827;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 16px;
+  color: #6b7280;
+}
+
+.filterRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.filterButton {
+  padding: 8px 12px;
+  border-radius: 9999px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.filterButtonActive {
+  background: #f97316;
+  border-color: #f97316;
+  color: #fff;
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+}
+
+.shopCard {
+  display: block;
+  padding: 20px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+}
+
+.shopCard:hover {
+  transform: translateY(-2px);
+}
+
+.shopTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.shopName {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  background: #fff7ed;
+  color: #f59e0b;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ratingIcon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.address {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.addressIcon {
+  width: 16px;
+  height: 16px;
+  color: #f97316;
+}
+
+@media (min-width: 1024px) {
+  .container {
+    width: min(1200px, calc(100% - 48px));
+  }
+
+  .page {
+    padding: 32px 0 80px;
+  }
+
+  .title {
+    font-size: 48px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

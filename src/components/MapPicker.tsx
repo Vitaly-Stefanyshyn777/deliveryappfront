@@ -11,6 +11,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
 import L from "leaflet";
+import styles from "./MapPicker.module.css";
 
 // Базові типи для Leaflet подій
 interface LeafletEvent {
@@ -136,7 +137,7 @@ export function MapPicker({
   >;
 
   return (
-    <div className="rounded-lg overflow-hidden border border-gray-200">
+    <div className={styles.frame}>
       <AnyMapContainer
         center={[center.lat, center.lng]}
         zoom={13}
@@ -155,7 +156,9 @@ export function MapPicker({
             radius={10}
             pathOptions={{ color: "#ec4899" }}
           >
-            <Popup>Магазин</Popup>
+            <Popup>
+              <div className={styles.popupText}>Магазин</div>
+            </Popup>
           </AnyCircleMarker>
         )}
         {value && (
@@ -164,7 +167,9 @@ export function MapPicker({
             radius={8}
             pathOptions={{ color: "#111827" }}
           >
-            <Popup>Вибрана адреса</Popup>
+            <Popup>
+              <div className={styles.popupText}>Вибрана адреса</div>
+            </Popup>
           </AnyCircleMarker>
         )}
         {points?.map((p) => (
@@ -186,10 +191,10 @@ export function MapPicker({
             }}
           >
             <Popup>
-              <div className="text-sm">
-                <div className="font-medium mb-1">{p.name}</div>
+              <div className={styles.popupText}>
+                <div className={styles.popupTitle}>{p.name}</div>
                 {p.address && (
-                  <div className="text-xs text-gray-600">{p.address}</div>
+                  <div className={styles.popupAddress}>{p.address}</div>
                 )}
               </div>
             </Popup>

@@ -1,0 +1,100 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.75);
+}
+
+.container {
+  width: min(1200px, calc(100% - 24px));
+  margin: 0 auto;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.brandIcon {
+  color: #f97316;
+  width: 32px;
+  height: 32px;
+}
+
+.nav {
+  display: none;
+  gap: 8px;
+}
+
+.navLink {
+  color: #4b5563;
+  padding: 8px 12px;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.navLink:hover {
+  color: #f97316;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconButton {
+  position: relative;
+  padding: 8px;
+  color: #4b5563;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.iconButton:hover {
+  color: #f97316;
+}
+
+.badge {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: #f97316;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.badgeIcon {
+  font-size: 11px;
+  line-height: 1;
+}
+
+@media (min-width: 1024px) {
+  .nav {
+    display: flex;
+  }
+}

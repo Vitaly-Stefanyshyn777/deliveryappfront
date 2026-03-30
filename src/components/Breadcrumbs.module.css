@@ -1,0 +1,34 @@
+.nav {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.separator {
+  margin: 0 8px;
+  color: #d1d5db;
+}
+
+.current {
+  font-weight: 600;
+  color: #374151;
+}
+
+.link {
+  color: inherit;
+}
+
+.link:hover {
+  color: #f97316;
+}

@@ -19,8 +19,7 @@ export interface NpPoint {
 
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(
-    url.startsWith("http") ? url : `${BACKEND_BASE_URL}${url}`,
-    { credentials: "include" }
+    url.startsWith("http") ? url : `${BACKEND_BASE_URL}${url}`
   );
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();

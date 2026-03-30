@@ -1,113 +1,92 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
 import { Header } from "@/components/Header";
-import { Loader2, AlertCircle, MapPin, Star } from "lucide-react";
-import { useShops } from "@/hooks/useShops";
-import { ShopQueryFilters } from "@/types";
+import { MapPin, Star } from "lucide-react";
+import styles from "./ShopsListView.module.css";
 
-const RATING_PRESETS: Array<{
-  label: string;
-  filters: ShopQueryFilters;
-}> = [
-  { label: "Всі", filters: {} },
-  { label: "4.0 - 5.0", filters: { minRating: 4, maxRating: 5 } },
-  { label: "3.0 - 4.0", filters: { minRating: 3, maxRating: 4 } },
-  { label: "2.0 - 3.0", filters: { minRating: 2, maxRating: 3 } },
+const DEMO_SHOPS = [
+  {
+    id: "761ed028-1003-43cd-aa26-26370908ab1d",
+    name: "Burger Express",
+    address: "Київ, Хрещатик 22",
+    rating: 4.9,
+  },
+  {
+    id: "ee2cdbe6-5e6c-4222-bde3-d1fc754d6007",
+    name: "Pizza Point",
+    address: "Львів, Шевченка 8",
+    rating: 4.8,
+  },
+  {
+    id: "15507b63-c0ab-4ae8-ba35-bb5bc9f834d1",
+    name: "Sushi Lane",
+    address: "Київ, Перемоги 15",
+    rating: 4.4,
+  },
 ];
 
 export function ShopsListView() {
-  const [activePresetIndex, setActivePresetIndex] = useState(0);
-  const activeFilters = RATING_PRESETS[activePresetIndex].filters;
-  const { data, isLoading, error } = useShops(activeFilters);
+  const [ratingFilter, setRatingFilter] = useState<"all" | "4-5" | "3-4" | "2-3">(
+    "all"
+  );
+
+  const filteredShops = useMemo(() => {
+    return DEMO_SHOPS.filter((shop) => {
+      if (ratingFilter === "all") return true;
+      if (ratingFilter === "4-5") return shop.rating >= 4;
+      if (ratingFilter === "3-4") return shop.rating >= 3 && shop.rating < 4;
+      return shop.rating >= 2 && shop.rating < 3;
+    });
+  }, [ratingFilter]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={styles.root}>
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Магазини</h1>
-            <p className="text-gray-600">
-              Оберіть магазин і відфільтруйте їх за рейтингом
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {RATING_PRESETS.map((preset, index) => {
-              const isActive = index === activePresetIndex;
-              return (
-                <button
-                  key={preset.label}
-                  type="button"
-                  onClick={() => setActivePresetIndex(index)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-pink-500 text-white"
-                      : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  {preset.label}
-                </button>
-              );
-            })}
-          </div>
+      <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.headerCard}>
+          <h1 className={styles.title}>Магазини</h1>
+          <p className={styles.subtitle}>
+            Оберіть магазин і відфільтруйте його за рейтингом
+          </p>
         </div>
 
-        {isLoading && (
-          <div className="flex justify-center items-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
-            <span className="ml-2 text-gray-600">Завантаження магазинів...</span>
-          </div>
-        )}
+        <div className={styles.filterRow}>
+          {[
+            { key: "all", label: "Всі" },
+            { key: "4-5", label: "4.0 - 5.0" },
+            { key: "3-4", label: "3.0 - 4.0" },
+            { key: "2-3", label: "2.0 - 3.0" },
+          ].map((item) => (
+            <button
+              key={item.key}
+              onClick={() => setRatingFilter(item.key as typeof ratingFilter)}
+              className={`${styles.filterButton} ${
+                ratingFilter === item.key ? styles.filterButtonActive : ""
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
 
-        {error && (
-          <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Помилка завантаження
-            </h2>
-            <p className="text-gray-600">
-              Не вдалося завантажити список магазинів.
-            </p>
-          </div>
-        )}
-
-        {!isLoading && !error && (!data || data.length === 0) && (
-          <div className="text-center py-12 text-gray-600">
-            Магазини для вибраного діапазону рейтингу не знайдені.
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data?.map((shop) => {
-            const rating = typeof shop.rating === "number" ? shop.rating : null;
-
-            return (
-              <Link
-                key={shop.id}
-                href={`/shops/${shop.id}`}
-                className="block p-5 bg-white border rounded-lg hover:shadow-md transition"
-              >
-                <div className="flex items-start justify-between gap-4 mb-3">
-                  <div className="text-lg font-semibold text-gray-900">
-                    {shop.name}
-                  </div>
-                  {rating !== null && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-amber-50 text-amber-700 text-sm font-medium">
-                      <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
-                      {rating.toFixed(1)}
-                    </span>
-                  )}
-                </div>
-                <div className="text-sm text-gray-600 flex items-start gap-2">
-                  <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-pink-500" />
-                  <span>{shop.address}</span>
-                </div>
-              </Link>
-            );
-          })}
+        <div className={styles.grid}>
+          {filteredShops.map((s) => (
+            <Link key={s.id} href={`/shops/${s.id}`} className={styles.shopCard}>
+              <div className={styles.shopTitleRow}>
+                <h2 className={styles.shopName}>{s.name}</h2>
+                <span className={styles.rating}>
+                  <Star className={styles.ratingIcon} />
+                  {s.rating.toFixed(1)}
+                </span>
+              </div>
+              <div className={styles.address}>
+                <MapPin className={styles.addressIcon} />
+                <span>{s.address}</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

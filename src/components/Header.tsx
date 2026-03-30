@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Heart, Flower } from "lucide-react";
+import { ShoppingCart, Heart, UtensilsCrossed } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { useFavoritesStore } from "@/stores/favoritesStore";
 import { useEffect, useState } from "react";
+import styles from "./Header.module.css";
 
 export function Header() {
   const { getTotalItems } = useCartStore();
@@ -16,60 +17,55 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-white shadow-sm border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Логотип */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Flower className="h-8 w-8 text-pink-500" />
-            <span className="text-xl font-bold text-gray-900">
-              Квітковий рай
-            </span>
+    <header className={styles.header}>
+      <div className={styles.container}>
+        <div className={styles.inner}>
+          <Link href="/" className={styles.brand}>
+            <UtensilsCrossed className={styles.brandIcon} />
+            <span>Delivery App</span>
           </Link>
 
-          {/* Навігація */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className={styles.nav}>
             <Link
               href="/shops"
-              className="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className={styles.navLink}
             >
               Магазини
             </Link>
             <Link
               href="/shop"
-              className="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className={styles.navLink}
             >
               Магазин
             </Link>
             <Link
               href="/cart"
-              className="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className={styles.navLink}
             >
               Кошик
             </Link>
             <Link
               href="/orders"
-              className="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className={styles.navLink}
             >
               Мої замовлення
             </Link>
             <Link
               href="/coupons"
-              className="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              className={styles.navLink}
             >
               Купони
             </Link>
           </nav>
 
-          {/* Іконки дій */}
-          <div className="flex items-center space-x-4">
+          <div className={styles.actions}>
             <Link
               href="/favorites"
-              className="relative p-2 text-gray-700 hover:text-pink-600 transition-colors"
+              className={styles.iconButton}
             >
-              <Heart className="h-6 w-6" />
+              <Heart className={styles.icon} />
               {isHydrated && favoriteIds.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className={`${styles.badge} ${styles.badgeIcon}`}>
                   {favoriteIds.length}
                 </span>
               )}
@@ -77,11 +73,11 @@ export function Header() {
 
             <Link
               href="/cart"
-              className="relative p-2 text-gray-700 hover:text-pink-600 transition-colors"
+              className={styles.iconButton}
             >
-              <ShoppingCart className="h-6 w-6" />
+              <ShoppingCart className={styles.icon} />
               {isHydrated && getTotalItems() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                <span className={`${styles.badge} ${styles.badgeIcon}`}>
                   {getTotalItems()}
                 </span>
               )}

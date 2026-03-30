@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { CartItem as CartItemType } from "@/types";
 import { useCartStore } from "@/stores/cartStore";
+import styles from "./CartItem.module.css";
 
 interface CartItemProps {
   item: CartItemType;
@@ -21,56 +22,54 @@ export function CartItem({ item }: CartItemProps) {
   };
 
   return (
-    <div className="flex items-center py-4">
-      <div className="relative w-20 h-20 flex-shrink-0">
+    <div className={styles.item}>
+      <div className={styles.imageWrap}>
         <Image
           src={item.imageUrl}
           alt={item.name}
           fill
           sizes="80px"
-          className="object-cover rounded-md"
+          className={styles.image}
         />
       </div>
 
-      <div className="ml-4 flex-1">
-        <h3 className="font-medium text-gray-900">{item.name}</h3>
-        <p className="text-gray-500">{item.price} ₴ за одиницю</p>
+      <div className={styles.content}>
+        <h3 className={styles.title}>{item.name}</h3>
+        <p className={styles.subtitle}>{item.price} ₴ за одиницю</p>
       </div>
 
-      <div className="flex items-center space-x-2 ml-4">
-        <div className="flex items-center border border-gray-300 rounded-md">
+      <div className={styles.actions}>
+        <div className={styles.qtyBox}>
           <button
             onClick={() => handleQuantityChange(item.qty - 1)}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded-l-md"
+            className={styles.qtyButton}
             aria-label="Зменшити кількість"
           >
-            <Minus className="h-4 w-4 text-gray-500" />
+            <Minus className={styles.qtyIcon} />
           </button>
 
-          <span className="w-8 text-center font-medium">{item.qty}</span>
+          <span className={styles.qtyValue}>{item.qty}</span>
 
           <button
             onClick={() => handleQuantityChange(item.qty + 1)}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded-r-md"
+            className={styles.qtyButton}
             aria-label="Збільшити кількість"
           >
-            <Plus className="h-4 w-4 text-gray-500" />
+            <Plus className={styles.qtyIcon} />
           </button>
         </div>
 
         <button
           onClick={handleRemoveItem}
-          className="p-2 text-red-500 hover:bg-red-50 rounded-md"
+          className={styles.removeButton}
           aria-label="Видалити товар"
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className={styles.removeIcon} />
         </button>
       </div>
 
-      <div className="ml-4 text-right">
-        <span className="font-medium text-gray-900">
-          {item.price * item.qty} ₴
-        </span>
+      <div className={styles.total}>
+        <span>{item.price * item.qty} ₴</span>
       </div>
     </div>
   );

@@ -1,0 +1,65 @@
+.root {
+  min-height: 100vh;
+}
+
+.container {
+  width: min(1200px, calc(100% - 24px));
+  margin: 0 auto;
+}
+
+.page {
+  padding: 24px 0 64px;
+}
+
+.stateCard {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+}
+
+.loaderIcon {
+  width: 32px;
+  height: 32px;
+  color: #f97316;
+  margin-bottom: 12px;
+  animation: spin 1s linear infinite;
+}
+
+.errorIcon,
+.emptyIcon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+}
+
+.errorIcon {
+  color: #ef4444;
+}
+
+.emptyIcon {
+  color: #9ca3af;
+}
+
+.stateText {
+  color: #6b7280;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    width: min(1200px, calc(100% - 48px));
+  }
+
+  .page {
+    padding: 32px 0 80px;
+  }
+}

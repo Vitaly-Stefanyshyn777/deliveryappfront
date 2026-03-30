@@ -22,14 +22,8 @@ export interface Shop {
   address: string;
   latitude: number;
   longitude: number;
-  rating?: number;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface ShopQueryFilters {
-  minRating?: number;
-  maxRating?: number;
 }
 
 // Типи для позицій замовлення
@@ -64,53 +58,6 @@ export interface CreateOrderRequest {
   totalPrice: number;
 }
 
-export interface CreateCartRequest {
-  shopId: string;
-  customerEmail: string;
-  customerPhone: string;
-}
-
-export interface AddCartItemRequest {
-  productId: string;
-  name: string;
-  qty: number;
-  price: number;
-}
-
-export interface UpdateCartItemRequest {
-  qty: number;
-}
-
-export interface CheckoutCartRequest {
-  deliveryAddr: string;
-  deliveryAt: string;
-  userTimezone: string;
-}
-
-export interface OrderHistoryQuery {
-  customerEmail?: string;
-  customerPhone?: string;
-  orderId?: string;
-}
-
-export interface BackendCartItem {
-  id: string;
-  productId: string;
-  name: string;
-  qty: number;
-  price: number;
-}
-
-export interface BackendCart {
-  id: string;
-  shopId: string;
-  customerEmail: string;
-  customerPhone: string;
-  items: BackendCartItem[];
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 // Типи для пагінації
 export interface PaginatedResponse<T> {
   items: T[];
@@ -141,7 +88,7 @@ export interface ProductFilters {
   isNew?: boolean;
   hasDiscount?: boolean;
   // Для бекенду
-  sortBy?: "price" | "createdAt" | "name" | "discountPercent";
+  sortBy?: "price" | "createdAt" | "name";
   sortOrder?: "asc" | "desc";
 }
 

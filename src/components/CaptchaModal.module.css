@@ -1,0 +1,80 @@
+.overlayWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+  position: relative;
+  width: min(100%, 420px);
+  margin: 0 16px;
+  padding: 16px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 25px 80px rgba(15, 23, 42, 0.24);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.closeButton {
+  color: #6b7280;
+}
+
+.text {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.button {
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+.cancelButton {
+  border: 1px solid #d1d5db;
+  background: #fff;
+}
+
+.submitButton {
+  background: #f97316;
+  color: #fff;
+}
+
+.submitButtonDisabled {
+  opacity: 0.5;
+}

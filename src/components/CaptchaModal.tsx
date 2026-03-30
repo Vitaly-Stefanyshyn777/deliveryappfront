@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import styles from "./CaptchaModal.module.css";
 
 interface CaptchaModalProps {
   open: boolean;
@@ -31,40 +32,42 @@ export function CaptchaModal({
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-sm mx-4 p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold">{title}</h3>
+    <div className={styles.overlayWrap}>
+      <div className={styles.overlay} onClick={onClose} />
+      <div className={styles.modal}>
+        <div className={styles.header}>
+          <h3 className={styles.title}>{title}</h3>
           <button
             type="button"
-            className="text-gray-500 hover:text-gray-700"
+            className={styles.closeButton}
             onClick={onClose}
           >
             ✕
           </button>
         </div>
-        <p className="text-sm text-gray-700 mb-3">
+        <p className={styles.text}>
           Підтвердіть, що ви людина: обчисліть {a} + {b}
         </p>
         <input
           type="number"
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
-          className="w-full px-3 py-2 border rounded-lg mb-4"
+          className={styles.input}
           placeholder="Введіть відповідь"
         />
-        <div className="flex justify-end gap-2">
+        <div className={styles.footer}>
           <button
             type="button"
-            className="px-3 py-2 border rounded-lg"
+            className={`${styles.button} ${styles.cancelButton}`}
             onClick={onClose}
           >
             Скасувати
           </button>
           <button
             type="button"
-            className="px-3 py-2 bg-pink-500 text-white rounded-lg disabled:opacity-50"
+            className={`${styles.button} ${styles.submitButton} ${
+              String(correct) !== answer.trim() ? styles.submitButtonDisabled : ""
+            }`}
             disabled={String(correct) !== answer.trim()}
             onClick={() => {
               if (String(correct) === answer.trim()) onSuccess();

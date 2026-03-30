@@ -1,75 +1,93 @@
 import Link from "next/link";
 import { Header } from "@/components/Header";
-import { Flower, Truck, Heart, Star } from "lucide-react";
+import {
+  BadgeCheck,
+  Clock3,
+  Truck,
+  UtensilsCrossed,
+} from "lucide-react";
+import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
+    <div className={styles.root}>
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Квіти для особливих моментів
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Замовляйте найкращі квіти з доставкою по всьому місту. Створюємо
-            незабутні моменти для ваших близьких.
-          </p>
-          <Link
-            href="/shop"
-            className="inline-flex items-center px-8 py-4 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 transition-colors text-lg"
-          >
-            <Flower className="mr-2 h-5 w-5" />
-            Перейти до магазину
-          </Link>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-            <Truck className="h-12 w-12 text-pink-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Швидка доставка</h3>
-            <p className="text-gray-600">
-              Доставляємо квіти протягом 2 годин по всьому місту
+      <main className={`${styles.main} ${styles.container}`}>
+        <section className={styles.hero}>
+          <div className={styles.heroInner}>
+            <span className={styles.heroBadge}>Delivery app</span>
+            <h1 className={styles.heroTitle}>
+              Їжа з доставкою швидко, зручно і без зайвих кроків
+            </h1>
+            <p className={styles.heroText}>
+              Обирай страви, додавай у кошик і оформлюй доставку в кілька
+              кліків. Інтерфейс уже стилізований під сучасний food delivery.
             </p>
+            <Link href="/shop" className={styles.heroButton}>
+              <UtensilsCrossed className={styles.heroButtonIcon} />
+              Перейти до меню
+            </Link>
           </div>
+        </section>
 
-          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-            <Heart className="h-12 w-12 text-pink-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Свіжі квіти</h3>
-            <p className="text-gray-600">
-              Тільки найсвіжіші квіти від перевірених постачальників
-            </p>
+        <section className={styles.benefits}>
+          {[
+            {
+              icon: Truck,
+              title: "Швидка доставка",
+              text: "Оформлюй замовлення та отримуй їжу без затримок.",
+            },
+            {
+              icon: UtensilsCrossed,
+              title: "Смачні позиції",
+              text: "Меню виглядає як справжній delivery marketplace.",
+            },
+            {
+              icon: BadgeCheck,
+              title: "Зручний checkout",
+              text: "Валідована форма, кошик і історія замовлень під рукою.",
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <article key={item.title} className={styles.benefitCard}>
+                <Icon className={styles.benefitIcon} />
+                <h3 className={styles.benefitTitle}>{item.title}</h3>
+                <p className={styles.benefitText}>{item.text}</p>
+              </article>
+            );
+          })}
+        </section>
+
+        <section className={styles.categoriesCard}>
+          <div className={styles.categoriesHeader}>
+            <div>
+              <h2 className={styles.categoriesTitle}>Популярні страви</h2>
+              <p className={styles.categoriesText}>
+                Категорії для швидкого замовлення
+              </p>
+            </div>
+            <div className={styles.timeText}>
+              <Clock3 className={styles.timeIcon} />
+              25-35 хвилин
+            </div>
           </div>
-
-          <div className="text-center p-6 bg-white rounded-xl shadow-sm">
-            <Star className="h-12 w-12 text-pink-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Висока якість</h3>
-            <p className="text-gray-600">
-              Професійні флористи створюють унікальні композиції
-            </p>
-          </div>
-        </div>
-
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
-            Популярні категорії
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {["Рози", "Тюльпани", "Лілії", "Хризантеми", "Букети"].map(
+          <div className={styles.categoryGrid}>
+            {["Burgers", "Pizza", "Drinks", "Desserts", "Salads"].map(
               (category) => (
                 <Link
                   key={category}
                   href={`/shop?category=${encodeURIComponent(category)}`}
-                  className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow text-center"
+                  className={styles.categoryCard}
                 >
-                  <Flower className="h-8 w-8 text-pink-500 mx-auto mb-2" />
-                  <span className="font-medium text-gray-900">{category}</span>
+                  <UtensilsCrossed className={styles.categoryIcon} />
+                  <span className={styles.categoryName}>{category}</span>
                 </Link>
               )
             )}
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );

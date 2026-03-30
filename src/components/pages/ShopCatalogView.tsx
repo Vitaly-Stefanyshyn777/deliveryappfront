@@ -1,20 +1,17 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductFilters } from "@/components/ProductFilters";
 import { QuickSort } from "@/components/QuickSort";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { useProducts } from "@/hooks/useProducts";
-import {
-  ProductFilters as ProductFiltersType,
-  SortOption,
-  Product,
-} from "@/types";
-import { Loader2 } from "lucide-react";
 import { useFavoritesStore } from "@/stores/favoritesStore";
+import { Product, ProductFilters as ProductFiltersType, SortOption } from "@/types";
+import styles from "./ShopCatalogView.module.css";
 
 export function ShopCatalogView() {
   const searchParams = useSearchParams();
@@ -29,32 +26,26 @@ export function ShopCatalogView() {
 
   const { data, isLoading, error } = useProducts(filters);
 
-  // Сортування продуктів
   const sortedProducts = useMemo(() => {
     if (!data?.items) return [];
 
     return [...data.items].sort((a: Product, b: Product) => {
       switch (sortBy) {
-        case "none":
-          return 0;
         case "price-asc":
           return a.price - b.price;
         case "price-desc":
           return b.price - a.price;
         case "date-asc":
-          return (
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          );
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         case "date-desc":
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        case "favorites-first":
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case "favorites-first": {
           const aIsFavorite = favoriteIds.includes(a.id);
           const bIsFavorite = favoriteIds.includes(b.id);
           if (aIsFavorite && !bIsFavorite) return -1;
           if (!aIsFavorite && bIsFavorite) return 1;
           return 0;
+        }
         default:
           return 0;
       }
@@ -67,23 +58,15 @@ export function ShopCatalogView() {
 
   const handleSortChange = (newSort: SortOption) => {
     setSortBy(newSort);
-    // Синхронізуємо з бекенд-параметрами
+
     if (newSort === "price-asc")
       setFilters((prev) => ({ ...prev, sortBy: "price", sortOrder: "asc" }));
     else if (newSort === "price-desc")
       setFilters((prev) => ({ ...prev, sortBy: "price", sortOrder: "desc" }));
     else if (newSort === "date-asc")
-      setFilters((prev) => ({
-        ...prev,
-        sortBy: "createdAt",
-        sortOrder: "asc",
-      }));
+      setFilters((prev) => ({ ...prev, sortBy: "createdAt", sortOrder: "asc" }));
     else if (newSort === "date-desc")
-      setFilters((prev) => ({
-        ...prev,
-        sortBy: "createdAt",
-        sortOrder: "desc",
-      }));
+      setFilters((prev) => ({ ...prev, sortBy: "createdAt", sortOrder: "desc" }));
     else if (newSort === "none")
       setFilters((prev) => ({
         ...prev,
@@ -98,16 +81,17 @@ export function ShopCatalogView() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className={styles.root}>
         <Header />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">
-              Помилка завантаження
-            </h1>
-            <p className="text-gray-600">
-              Не вдалося завантажити каталог квітів. Спробуйте пізніше.
-            </p>
+        <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.error}>
+            <div className={styles.stateCenter}>
+              <AlertCircle className={styles.stateIcon} />
+              <h1 className={styles.errorTitle}>Помилка завантаження</h1>
+              <p className={styles.loadingText}>
+                Не вдалося завантажити каталог. Спробуйте пізніше.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -115,114 +99,88 @@ export function ShopCatalogView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={styles.root}>
       <Header />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-4">
-          <Breadcrumbs
-            items={[{ label: "Головна", href: "/" }, { label: "Магазин" }]}
-          />
+      <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.breadcrumb}>
+          <Breadcrumbs items={[{ label: "Головна", href: "/" }, { label: "Меню" }]} />
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Фільтри */}
-          <div className="lg:w-64 flex-shrink-0">
+        <div className={styles.layout}>
+          <div className={styles.sidebar}>
             <ProductFilters
               filters={filters}
               sortBy={sortBy}
               onFilterChange={handleFilterChange}
               onSortChange={handleSortChange}
             />
-            {/* <div className="mt-6 p-4 bg-white rounded-lg border">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-gray-900">Букети</h3>
-                <Link
-                  href="/shop?category=Букети"
-                  className="text-sm text-pink-600 hover:underline"
-                >
-                  Показати всі
-                </Link>
-              </div>
-              <p className="text-sm text-gray-600">
-                Переглянь добірку: «Червона любов», «Ніжність», «Весняний
-                настрій», «Білий шовк».
-              </p>
-            </div> */}
           </div>
 
-          {/* Каталог */}
-          <div className="flex-1">
-            {/* Швидке сортування (на всю ширину контейнера) */}
-            <div className="mb-6">
+          <div className={styles.content}>
+            <div className={styles.sectionHeader}>
               <QuickSort sortBy={sortBy} onSortChange={handleSortChange} />
             </div>
+
             {isLoading ? (
-              <div className="flex justify-center items-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-pink-500" />
-                <span className="ml-2 text-gray-600">Завантаження...</span>
+              <div className={styles.loading}>
+                <div className={styles.loaderRow}>
+                  <Loader2 className={styles.spinner} />
+                  <span className={styles.loadingText}>Завантаження...</span>
+                </div>
               </div>
             ) : data ? (
               <>
-                {/* Результати */}
-                <div className="mb-6">
-                  <p className="text-gray-600">
+                <div className={styles.results}>
+                  <p>
                     Знайдено {data.total} товарів
                     {filters.category && ` в категорії "${filters.category}"`}
                     {filters.search && ` за запитом "${filters.search}"`}
                   </p>
                 </div>
 
-                {/* Сітка товарів */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+                <div className={styles.grid}>
                   {sortedProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
 
-                {/* Пагінація */}
                 {data.totalPages > 1 && (
-                  <div className="flex justify-center">
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => handlePageChange(filters.page! - 1)}
-                        disabled={filters.page === 1}
-                        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Попередня
-                      </button>
+                  <div className={styles.pagination}>
+                    <button
+                      onClick={() => handlePageChange(filters.page! - 1)}
+                      disabled={filters.page === 1}
+                      className={styles.pageButton}
+                    >
+                      Попередня
+                    </button>
 
-                      {Array.from(
-                        { length: data.totalPages },
-                        (_, i) => i + 1
-                      ).map((page) => (
+                    {Array.from({ length: data.totalPages }, (_, i) => i + 1).map(
+                      (page) => (
                         <button
                           key={page}
                           onClick={() => handlePageChange(page)}
-                          className={`px-3 py-2 text-sm font-medium rounded-md ${
-                            page === filters.page
-                              ? "bg-pink-500 text-white"
-                              : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-50"
+                          className={`${styles.pageButton} ${
+                            page === filters.page ? styles.pageButtonActive : ""
                           }`}
                         >
                           {page}
                         </button>
-                      ))}
+                      )
+                    )}
 
-                      <button
-                        onClick={() => handlePageChange(filters.page! + 1)}
-                        disabled={filters.page === data.totalPages}
-                        className="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Наступна
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => handlePageChange(filters.page! + 1)}
+                      disabled={filters.page === data.totalPages}
+                      className={styles.pageButton}
+                    >
+                      Наступна
+                    </button>
                   </div>
                 )}
               </>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-600">Товари не знайдено</p>
+              <div className={styles.empty}>
+                <p className={styles.emptyText}>Товари не знайдено</p>
               </div>
             )}
           </div>

@@ -1,0 +1,33 @@
+.frame {
+  overflow: hidden;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+  border-radius: 16px;
+}
+
+.popupText {
+  font-size: 14px;
+}
+
+.popupTitle {
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.popupAddress {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+@media (max-width: 1024px) {
+  .frame {
+    border-radius: 14px;
+  }
+
+  .popupText {
+    font-size: 3.4vw;
+  }
+
+  .popupAddress {
+    font-size: 3vw;
+  }
+}

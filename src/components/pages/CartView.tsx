@@ -2,48 +2,47 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ShoppingCart, Trash2 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { CartItem } from "@/components/CartItem";
 import { OrderForm } from "@/components/OrderForm";
 import { useCartStore } from "@/stores/cartStore";
+import { useCreateOrder } from "@/hooks/useOrders";
 import { useValidateCoupon } from "@/hooks/useCoupons";
-import { apiClient } from "@/lib/api";
-import { ShoppingCart, Trash2 } from "lucide-react";
-import { Coupon, OrderFormData } from "@/types";
+import { Coupon } from "@/types";
+import styles from "./CartView.module.css";
 
 export function CartView() {
   const router = useRouter();
   const { items, clearCart, getTotalPrice, getTotalItems } = useCartStore();
+  const createOrderMutation = useCreateOrder();
   const validateCoupon = useValidateCoupon();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [couponInfo, setCouponInfo] = useState<Coupon | null>(null);
 
-  const handleSubmitOrder = async (formData: OrderFormData) => {
+  const handleSubmitOrder = async (formData: {
+    deliveryAddr: string;
+    deliveryAt: string;
+  }) => {
     if (items.length === 0) return;
     setIsSubmitting(true);
     try {
       const shopId = "761ed028-1003-43cd-aa26-26370908ab1d";
-      const cart = await apiClient.createCart({
+      const orderData = {
         shopId,
-        customerEmail: formData.email,
-        customerPhone: formData.phone,
-      });
-
-      for (const item of items) {
-        await apiClient.addCartItem(cart.id, {
+        deliveryAddr: formData.deliveryAddr,
+        deliveryAt: formData.deliveryAt,
+        userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        items: items.map((item) => ({
           productId: item.productId,
           name: item.name,
           qty: item.qty,
           price: item.price,
-        });
-      }
-
-      const order = await apiClient.checkoutCart(cart.id, {
-        deliveryAddr: formData.deliveryAddr,
-        deliveryAt: formData.deliveryAt,
-        userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      });
+        })),
+        totalPrice: getTotalPrice(),
+      };
+      const order = await createOrderMutation.mutateAsync(orderData);
       clearCart();
       router.push(`/orders/${order.id}`);
     } catch {
@@ -55,22 +54,20 @@ export function CartView() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className={styles.root}>
         <Header />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <ShoppingCart className="h-24 w-24 text-gray-300 mx-auto mb-6" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Ваш кошик порожній
-            </h1>
-            <p className="text-gray-600 mb-8">
-              Додайте квіти до кошика, щоб зробити замовлення
+        <div className={`${styles.container} ${styles.page}`}>
+          <div className={styles.emptyCard}>
+            <ShoppingCart className={styles.emptyIcon} />
+            <h1 className={styles.title}>Ваш кошик порожній</h1>
+            <p className={styles.subtitle}>
+              Додайте позиції в кошик, щоб оформити доставку
             </p>
             <button
               onClick={() => router.push("/shop")}
-              className="bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition-colors"
+              className={styles.emptyButton}
             >
-              Перейти до магазину
+              Перейти до меню
             </button>
           </div>
         </div>
@@ -79,35 +76,26 @@ export function CartView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={styles.root}>
       <Header />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Кошик ({getTotalItems()} товарів)
-          </h1>
-          <p className="text-gray-600">
-            Перевірте ваші товари та оформіть замовлення
+      <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.headingBlock}>
+          <h1 className={styles.title}>Кошик ({getTotalItems()} товарів)</h1>
+          <p className={styles.subtitle}>
+            Перевірте позиції та оформіть доставку
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Товари в кошику
-                  </h2>
-                  <button
-                    onClick={clearCart}
-                    className="text-red-500 hover:text-red-600 flex items-center text-sm"
-                  >
-                    <Trash2 className="h-4 w-4 mr-1" /> Очистити кошик
-                  </button>
-                </div>
+        <div className={styles.layout}>
+          <div>
+            <div className={styles.itemsCard}>
+              <div className={styles.itemsHeader}>
+                <h2 className={styles.itemsTitle}>Товари в кошику</h2>
+                <button onClick={clearCart} className={styles.clearCart}>
+                  <Trash2 className={styles.clearIcon} /> Очистити кошик
+                </button>
               </div>
-              <div className="divide-y divide-gray-200">
+              <div className={styles.divider}>
                 {items.map((item) => (
                   <CartItem key={item.productId} item={item} />
                 ))}
@@ -115,33 +103,27 @@ export function CartView() {
             </div>
           </div>
 
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
-              <h2 className="text-lg font-semibold text-gray-900 mb-6">
-                Оформлення замовлення
-              </h2>
-              <div className="mb-6 p-4 bg-white rounded-lg border">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-800">Товарів:</span>
-                  <span className="font-semibold text-gray-900">
-                    {getTotalItems()}
-                  </span>
+          <div>
+            <div className={styles.summaryCard}>
+              <h2 className={styles.summaryTitle}>Оформлення замовлення</h2>
+              <div className={styles.summaryBox}>
+                <div className={styles.summaryRow}>
+                  <span className={styles.summaryLabel}>Товарів:</span>
+                  <span className={styles.summaryValue}>{getTotalItems()}</span>
                 </div>
-                <div className="mt-3">
-                  <label className="block text-sm font-medium text-gray-900 mb-1">
-                    Код купона
-                  </label>
-                  <div className="flex gap-2">
+                <div>
+                  <label className={styles.couponLabel}>Код купона</label>
+                  <div className={styles.couponRow}>
                     <input
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
                       placeholder="Напр., WELCOME10"
-                      className="flex-1 px-3 py-2 border rounded-lg text-gray-900"
+                      className={styles.couponInput}
                     />
                     <button
                       type="button"
-                      className="px-3 py-2 border rounded-lg text-gray-900 hover:bg-gray-50"
+                      className={styles.couponButton}
                       onClick={async () => {
                         try {
                           const data = await validateCoupon.mutateAsync({
@@ -159,23 +141,21 @@ export function CartView() {
                     </button>
                   </div>
                   {couponInfo && (
-                    <p className="mt-2 text-sm text-green-700">
+                    <p className={styles.successText}>
                       Застосовано купон {couponInfo.code}
                     </p>
                   )}
                 </div>
-                <div className="flex justify-between items-center text-lg font-semibold mt-3">
-                  <span className="text-gray-900">До сплати:</span>
-                  <span className="text-pink-600">
+                <div className={styles.totalRow}>
+                  <span>До сплати:</span>
+                  <span className={styles.totalValue}>
                     {(() => {
                       const total = getTotalPrice();
                       if (!couponInfo) return total;
                       if (couponInfo.discountPercent)
                         return Math.max(
                           0,
-                          Math.round(
-                            total * (1 - couponInfo.discountPercent / 100)
-                          )
+                          Math.round(total * (1 - couponInfo.discountPercent / 100))
                         );
                       if (couponInfo.discountAmount)
                         return Math.max(0, total - couponInfo.discountAmount);

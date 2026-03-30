@@ -1,0 +1,113 @@
+.card {
+  max-width: 960px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+}
+
+.header {
+  padding: 24px;
+  background: #f97316;
+  color: #fff;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.body {
+  display: grid;
+  gap: 24px;
+  padding: 24px;
+}
+
+.section {
+  padding: 16px;
+  border-radius: 16px;
+  background: #f9fafb;
+}
+
+.sectionAlt {
+  padding: 16px;
+  border-radius: 16px;
+  background: #fff6ed;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+.miniIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 14px;
+  background: #f9fafb;
+}
+
+.itemContent {
+  flex: 1;
+}
+
+.itemRight {
+  text-align: right;
+}
+
+.itemName {
+  margin: 0;
+  font-weight: 600;
+}
+
+.itemMeta {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.totalRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.totalLabel {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.totalValue {
+  font-size: 24px;
+  font-weight: 800;
+  color: #f97316;
+}

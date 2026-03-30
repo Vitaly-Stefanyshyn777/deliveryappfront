@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { MapPoint } from "./MapPicker";
 import { useNpCities, useNpWarehouses } from "@/hooks/useNovaPoshta";
 import { BACKEND_BASE_URL } from "@/lib/env";
+import styles from "./ModalMapPicker.module.css";
 
 type LatLng = { lat: number; lng: number };
 
@@ -96,8 +97,7 @@ export function ModalMapPicker({
           const res = await fetch(
             `${BACKEND_BASE_URL}/api/v1/nova-poshta/cities?query=${encodeURIComponent(
               name
-            )}&limit=1`,
-            { credentials: "include" }
+            )}&limit=1`
           );
           const data = await res.json();
           const ref = data?.items?.[0]?.ref;
@@ -106,7 +106,7 @@ export function ModalMapPicker({
         const all: MapPoint[] = [];
         for (const ref of cityRefs) {
           const url = `${BACKEND_BASE_URL}/api/v1/nova-poshta/warehouses?cityRef=${ref}&type=both&limit=50`;
-          const r = await fetch(url, { credentials: "include" });
+          const r = await fetch(url);
           const d = await r.json();
           if (Array.isArray(d?.points)) {
             all.push(
@@ -148,22 +148,22 @@ export function ModalMapPicker({
   }, [wh.data, bootstrapPoints, points]);
 
   return (
-    <div>
+    <div className={styles.root}>
       <button
         type="button"
         onClick={() => setOpen(true)}
         disabled={open}
         aria-expanded={open}
-        className="px-3 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        className={styles.triggerButton}
       >
         {triggerLabel}
       </button>
 
       {open &&
         createPortal(
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className={styles.overlayWrap}>
             <div
-              className="absolute inset-0 bg-black/50"
+              className={styles.overlay}
               onMouseDown={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
@@ -173,20 +173,20 @@ export function ModalMapPicker({
                 e.preventDefault();
               }}
             />
-            <div className="relative bg-white rounded-xl shadow-xl w-full max-w-4xl mx-4">
-              <div className="flex items-center justify-between p-4 border-b">
-                <h3 className="text-lg font-semibold">Вибір адреси на мапі</h3>
+            <div className={styles.modal}>
+              <div className={styles.header}>
+                <h3 className={styles.title}>Вибір адреси на мапі</h3>
                 <button
                   type="button"
-                  className="text-gray-500 hover:text-gray-700"
+                  className={styles.closeButton}
                   onClick={() => setOpen(false)}
                 >
                   ✕
                 </button>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 p-4">
-                <div className="lg:col-span-1">
-                  <div className="mb-3">
+              <div className={styles.body}>
+                <div className={styles.sidebar}>
+                  <div className={styles.section}>
                     <input
                       type="text"
                       value={cityQuery}
@@ -201,10 +201,10 @@ export function ModalMapPicker({
                         }
                       }}
                       placeholder="Місто..."
-                      className="w-full px-3 py-2 border rounded-lg text-gray-900 placeholder-gray-400"
+                      className={styles.input}
                     />
                     {cityQuery.length >= 2 && cities.data?.items && (
-                      <div className="mt-2 max-h-56 overflow-auto border rounded-lg divide-y bg-white text-gray-900 shadow-sm">
+                      <div className={styles.suggestions}>
                         {cities.data.items.map((c) => (
                           <button
                             type="button"
@@ -214,8 +214,10 @@ export function ModalMapPicker({
                               setCityQuery(c.name);
                               onAddressSelect?.(c.name);
                             }}
-                            className={`w-full text-left px-3 py-2 hover:bg-pink-50 text-gray-900 ${
-                              selectedCityRef === c.ref ? "bg-pink-50" : ""
+                            className={`${styles.suggestionButton} ${
+                              selectedCityRef === c.ref
+                                ? styles.suggestionActive
+                                : ""
                             }`}
                           >
                             {c.name}
@@ -224,22 +226,20 @@ export function ModalMapPicker({
                       </div>
                     )}
                     {!selectedCityRef && (
-                      <p className="mt-2 text-xs text-gray-500">
+                      <p className={styles.hint}>
                         Оберіть місто зі списку, щоб побачити відділення
                       </p>
                     )}
                   </div>
 
-                  <div className="mb-3 flex gap-2">
+                  <div className={styles.tabs}>
                     {(["both", "warehouse", "postomat"] as const).map((t) => (
                       <button
                         type="button"
                         key={t}
                         onClick={() => setTab(t)}
-                        className={`px-3 py-1 rounded-lg text-sm border transition-colors ${
-                          tab === t
-                            ? "bg-pink-500 text-white border-pink-500"
-                            : "bg-white text-gray-900 hover:bg-gray-50"
+                        className={`${styles.tab} ${
+                          tab === t ? styles.tabActive : ""
                         }`}
                       >
                         {t === "both"
@@ -251,7 +251,7 @@ export function ModalMapPicker({
                     ))}
                   </div>
 
-                  <div className="mb-3">
+                  <div className={styles.section}>
                     <input
                       type="text"
                       value={streetQuery}
@@ -270,11 +270,11 @@ export function ModalMapPicker({
                         }
                       }}
                       placeholder="Пошук по вулиці..."
-                      className="w-full px-3 py-2 border rounded-lg text-gray-900 placeholder-gray-400"
+                      className={styles.input}
                     />
                   </div>
 
-                  <div className="max-h-80 overflow-auto border rounded-lg divide-y">
+                  <div className={styles.list}>
                     {mapPoints.map((p) => (
                       <button
                         type="button"
@@ -288,21 +288,19 @@ export function ModalMapPicker({
                           if (city) setCityQuery(city);
                           onAddressSelect?.(addr || "");
                         }}
-                        className="w-full text-left px-3 py-2 hover:bg-gray-50"
+                        className={styles.listButton}
                       >
-                        <div className="text-sm font-medium">{p.name}</div>
-                        <div className="text-xs text-gray-500">{p.address}</div>
+                        <div className={styles.listTitle}>{p.name}</div>
+                        <div className={styles.listMeta}>{p.address}</div>
                       </button>
                     ))}
                     {wh.isFetching && (
-                      <div className="p-3 text-sm text-gray-500">
-                        Завантаження...
-                      </div>
+                      <div className={styles.listMeta}>Завантаження...</div>
                     )}
                   </div>
                 </div>
 
-                <div className="lg:col-span-3">
+                <div className={styles.mapWrap}>
                   <MapPicker
                     value={value}
                     onChange={onChange}
@@ -322,17 +320,17 @@ export function ModalMapPicker({
                   />
                 </div>
               </div>
-              <div className="flex justify-end gap-2 p-4 border-t">
+              <div className={styles.footer}>
                 <button
                   type="button"
-                  className="px-3 py-2 border rounded-lg"
+                  className={styles.footerButton}
                   onClick={() => setOpen(false)}
                 >
                   Закрити
                 </button>
                 <button
                   type="button"
-                  className="px-3 py-2 bg-pink-500 text-white rounded-lg"
+                  className={`${styles.footerButton} ${styles.footerPrimary}`}
                   onClick={() => setOpen(false)}
                 >
                   Застосувати

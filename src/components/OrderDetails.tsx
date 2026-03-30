@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { uk } from "date-fns/locale";
 import { MapPin, Calendar, Package, CreditCard } from "lucide-react";
 import { Order } from "@/types";
+import styles from "./OrderDetails.module.css";
 
 interface OrderDetailsProps {
   order: Order;
@@ -16,82 +17,82 @@ export function OrderDetails({ order }: OrderDetailsProps) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="bg-pink-500 text-white p-6">
-        <h1 className="text-2xl font-bold">Замовлення #{order.id}</h1>
-        <p className="text-pink-100 mt-1">
+    <div className={styles.card}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Замовлення #{order.id}</h1>
+        <p className={styles.subtitle}>
           Створено {formatDate(order.createdAt)}
         </p>
       </div>
 
-      <div className="p-6 space-y-6">
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-            <Package className="h-5 w-5 mr-2 text-pink-500" />
+      <div className={styles.body}>
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>
+            <Package className={styles.icon} />
             Магазин
           </h2>
-          <div className="space-y-2">
-            <p className="font-medium text-gray-900">{order.shop.name}</p>
-            <p className="text-gray-600 flex items-center">
-              <MapPin className="h-4 w-4 mr-2" />
+          <div className={styles.list}>
+            <p className={styles.itemName}>{order.shop.name}</p>
+            <p className={styles.itemMeta}>
+              <MapPin className={styles.miniIcon} />
               {order.shop.address}
             </p>
           </div>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-            <MapPin className="h-5 w-5 mr-2 text-pink-500" />
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>
+            <MapPin className={styles.icon} />
             Доставка
           </h2>
-          <div className="space-y-2">
-            <p className="text-gray-600 flex items-center">
-              <MapPin className="h-4 w-4 mr-2" />
+          <div className={styles.list}>
+            <p className={styles.itemMeta}>
+              <MapPin className={styles.miniIcon} />
               {order.deliveryAddr}
             </p>
-            <p className="text-gray-600 flex items-center">
-              <Calendar className="h-4 w-4 mr-2" />
+            <p className={styles.itemMeta}>
+              <Calendar className={styles.miniIcon} />
               {formatDate(order.deliveryAtUTC)}
             </p>
           </div>
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <Package className="h-5 w-5 mr-2 text-pink-500" />
+          <h2 className={styles.sectionTitle}>
+            <Package className={styles.icon} />
             Товари
           </h2>
-          <div className="space-y-3">
+          <div className={styles.list}>
             {order.items.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                className={styles.item}
               >
-                <div className="flex-1">
-                  <h3 className="font-medium text-gray-900">{item.name}</h3>
-                  <p className="text-sm text-gray-600">
+                <div className={styles.itemContent}>
+                  <h3 className={styles.itemName}>{item.name}</h3>
+                  <p className={styles.itemMeta}>
                     Кількість: {item.qty} шт.
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium text-gray-900">
+                <div className={styles.itemRight}>
+                  <p className={styles.itemName}>
                     {item.price * item.qty} ₴
                   </p>
-                  <p className="text-sm text-gray-600">{item.price} ₴ за шт.</p>
+                  <p className={styles.itemMeta}>{item.price} ₴ за шт.</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-pink-50 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-            <CreditCard className="h-5 w-5 mr-2 text-pink-500" />
+        <div className={styles.sectionAlt}>
+          <h2 className={styles.sectionTitle}>
+            <CreditCard className={styles.icon} />
             Підсумок
           </h2>
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-medium text-gray-900">Всього:</span>
-            <span className="text-2xl font-bold text-pink-600">
+          <div className={styles.totalRow}>
+            <span className={styles.totalLabel}>Всього:</span>
+            <span className={styles.totalValue}>
               {order.totalPrice} ₴
             </span>
           </div>
