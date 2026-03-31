@@ -40,6 +40,60 @@
   gap: 8px;
 }
 
+.burgerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  color: #4b5563;
+  border-radius: 9999px;
+}
+
+.burgerButton:hover {
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.08);
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(0, 0, 0, 0.32);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mobileMenuPanel {
+  width: 320px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  border-left: 1px solid rgba(31, 41, 55, 0.08);
+  box-shadow: -24px 0 60px rgba(15, 23, 42, 0.16);
+  padding: 16px;
+}
+
+.mobileNav {
+  display: grid;
+  gap: 8px;
+}
+
+.mobileNavLink {
+  display: flex;
+  align-items: center;
+  padding: 12px 12px;
+  border-radius: 16px;
+  color: #111827;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+}
+
+.mobileNavLink:hover {
+  border-color: rgba(249, 115, 22, 0.4);
+  background: #fff6ed;
+}
+
 .navLink {
   color: #4b5563;
   padding: 8px 12px;
@@ -98,6 +152,11 @@
   .nav {
     display: flex;
   }
+
+  .burgerButton,
+  .mobileMenuOverlay {
+    display: none;
+  }
 }
 
 @media (max-width: 1200px) {
@@ -147,5 +206,20 @@
 
   .badgeIcon {
     font-size: vw(11);
+  }
+
+  .burgerButton {
+    padding: vw(8);
+  }
+
+  .mobileMenuPanel {
+    width: vw(320);
+    padding: vw(16);
+  }
+
+  .mobileNavLink {
+    padding: vw(12) vw(12);
+    border-radius: vw(16);
+    font-size: vw(14);
   }
 }

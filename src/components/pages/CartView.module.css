@@ -239,6 +239,8 @@
 
   .itemsHeader {
     padding: vw(16);
+    flex-wrap: wrap;
+    gap: vw(10);
   }
 
   .itemsTitle {
@@ -247,6 +249,9 @@
 
   .clearCart {
     font-size: vw(13);
+    padding: vw(6) vw(10);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: vw(12);
   }
 
   .summaryCard {

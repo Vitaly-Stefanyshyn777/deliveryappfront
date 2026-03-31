@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Heart, UtensilsCrossed } from "lucide-react";
+import { ShoppingCart, Heart, UtensilsCrossed, Menu, X } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { useFavoritesStore } from "@/stores/favoritesStore";
 import { useEffect, useState } from "react";
@@ -11,10 +11,20 @@ export function Header() {
   const { getTotalItems } = useCartStore();
   const { favoriteIds } = useFavoritesStore();
   const [isHydrated, setIsHydrated] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileMenuOpen]);
 
   return (
     <header className={styles.header}>
@@ -26,43 +36,40 @@ export function Header() {
           </Link>
 
           <nav className={styles.nav}>
-            <Link
-              href="/shops"
-              className={styles.navLink}
-            >
+            <Link href="/shops" className={styles.navLink}>
               Магазини
             </Link>
-            <Link
-              href="/shop"
-              className={styles.navLink}
-            >
+            <Link href="/shop" className={styles.navLink}>
               Магазин
             </Link>
-            <Link
-              href="/cart"
-              className={styles.navLink}
-            >
+            <Link href="/cart" className={styles.navLink}>
               Кошик
             </Link>
-            <Link
-              href="/orders"
-              className={styles.navLink}
-            >
+            <Link href="/orders" className={styles.navLink}>
               Мої замовлення
             </Link>
-            <Link
-              href="/coupons"
-              className={styles.navLink}
-            >
+            <Link href="/coupons" className={styles.navLink}>
               Купони
             </Link>
           </nav>
 
           <div className={styles.actions}>
-            <Link
-              href="/favorites"
-              className={styles.iconButton}
+            <button
+              type="button"
+              className={styles.burgerButton}
+              aria-label={mobileMenuOpen ? "Закрити меню" : "Відкрити меню"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav"
+              onClick={() => setMobileMenuOpen((v) => !v)}
             >
+              {mobileMenuOpen ? (
+                <X className={styles.icon} />
+              ) : (
+                <Menu className={styles.icon} />
+              )}
+            </button>
+
+            <Link href="/favorites" className={styles.iconButton}>
               <Heart className={styles.icon} />
               {isHydrated && favoriteIds.length > 0 && (
                 <span className={`${styles.badge} ${styles.badgeIcon}`}>
@@ -71,10 +78,7 @@ export function Header() {
               )}
             </Link>
 
-            <Link
-              href="/cart"
-              className={styles.iconButton}
-            >
+            <Link href="/cart" className={styles.iconButton}>
               <ShoppingCart className={styles.icon} />
               {isHydrated && getTotalItems() > 0 && (
                 <span className={`${styles.badge} ${styles.badgeIcon}`}>
@@ -85,6 +89,58 @@ export function Header() {
           </div>
         </div>
       </div>
+
+      {mobileMenuOpen && (
+        <div
+          className={styles.mobileMenuOverlay}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Мобільне меню"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) setMobileMenuOpen(false);
+          }}
+        >
+          <div className={styles.mobileMenuPanel} id="mobile-nav">
+            <nav className={styles.mobileNav}>
+              <Link
+                href="/shops"
+                className={styles.mobileNavLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Магазини
+              </Link>
+              <Link
+                href="/shop"
+                className={styles.mobileNavLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Магазин
+              </Link>
+              <Link
+                href="/cart"
+                className={styles.mobileNavLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Кошик
+              </Link>
+              <Link
+                href="/orders"
+                className={styles.mobileNavLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Мої замовлення
+              </Link>
+              <Link
+                href="/coupons"
+                className={styles.mobileNavLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Купони
+              </Link>
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

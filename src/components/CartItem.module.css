@@ -89,3 +89,72 @@
   font-weight: 700;
   color: #111827;
 }
+
+@media (max-width: 1024px) {
+  .item {
+    display: grid;
+    grid-template-columns: vw(72) minmax(0, 1fr);
+    grid-template-areas:
+      "img content"
+      "img actions"
+      "total total";
+    gap: vw(12);
+    padding: vw(14) 0;
+    align-items: start;
+  }
+
+  .imageWrap {
+    grid-area: img;
+    width: vw(72);
+    height: vw(72);
+  }
+
+  .content {
+    grid-area: content;
+  }
+
+  .title {
+    font-size: vw(16);
+  }
+
+  .subtitle {
+    font-size: vw(13);
+  }
+
+  .actions {
+    grid-area: actions;
+    justify-content: flex-start;
+    gap: vw(10);
+  }
+
+  .qtyButton {
+    padding: vw(8);
+  }
+
+  .qtyIcon {
+    width: vw(16);
+    height: vw(16);
+  }
+
+  .qtyValue {
+    width: vw(32);
+    font-size: vw(14);
+  }
+
+  .removeButton {
+    padding: vw(8);
+  }
+
+  .removeIcon {
+    width: vw(16);
+    height: vw(16);
+  }
+
+  .total {
+    grid-area: total;
+    margin-left: 0;
+    padding-top: vw(8);
+    border-top: 1px solid rgba(31, 41, 55, 0.08);
+    font-size: vw(16);
+  }
+}
