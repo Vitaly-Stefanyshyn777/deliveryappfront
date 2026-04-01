@@ -49,7 +49,7 @@ export const useFavoritesStore = create<FavoritesStore>()(
         if (!state?.favoriteIds?.length) return;
         const deduped = uniq(state.favoriteIds);
         if (deduped.length !== state.favoriteIds.length) {
-          useFavoritesStore.setState({ favoriteIds: deduped }, true);
+          useFavoritesStore.setState({ favoriteIds: deduped });
         }
       },
     }
