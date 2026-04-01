@@ -12,6 +12,10 @@
   padding: 24px 0 64px;
 }
 
+.breadcrumb {
+  margin-bottom: 16px;
+}
+
 .headerCard {
   padding: 24px;
   margin-bottom: 24px;
@@ -65,6 +69,7 @@
 
 .shopCard {
   display: block;
+  text-align: left;
   padding: 20px;
   border-radius: 24px;
   background: #fff;
@@ -74,6 +79,40 @@
 
 .shopCard:hover {
   transform: translateY(-2px);
+}
+
+.loadingCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 140px;
+  padding: 20px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  color: #f97316;
+  animation: spin 1s linear infinite;
+}
+
+.stateIcon {
+  width: 22px;
+  height: 22px;
+  color: #ef4444;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .shopTitleRow {
@@ -145,6 +184,10 @@
     padding: vw(24) 0 vw(64);
   }
 
+  .breadcrumb {
+    margin-bottom: vw(12);
+  }
+
   .headerCard {
     padding: vw(16);
     margin-bottom: vw(16);
@@ -176,6 +219,20 @@
   .shopCard {
     padding: vw(16);
     border-radius: vw(20);
+  }
+
+  .loadingCard {
+    min-height: vw(140);
+    padding: vw(16);
+    border-radius: vw(20);
+    gap: vw(10);
+    font-size: vw(14);
+  }
+
+  .spinner,
+  .stateIcon {
+    width: vw(22);
+    height: vw(22);
   }
 
   .shopName {

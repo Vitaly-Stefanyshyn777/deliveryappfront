@@ -12,7 +12,14 @@ export function useActiveCoupons() {
 
 export function useValidateCoupon() {
   return useMutation({
-    mutationFn: ({ code, total }: { code: string; total: number }) =>
-      validateCoupon(code, total),
+    mutationFn: ({
+      code,
+      total,
+      cartId,
+    }: {
+      code: string;
+      total: number;
+      cartId?: string;
+    }) => validateCoupon(code, total, cartId),
   });
 }

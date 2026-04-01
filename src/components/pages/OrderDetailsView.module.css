@@ -12,6 +12,27 @@
   padding: 24px 0 64px;
 }
 
+.breadcrumb {
+  margin-bottom: 16px;
+}
+
+.reorderButton {
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.reorderButton:hover {
+  background: #f97316;
+  border-color: #f97316;
+  color: #fff;
+}
+
 .stateCard {
   display: grid;
   place-items: center;
@@ -75,6 +96,16 @@
 
   .page {
     padding: vw(24) 0 vw(64);
+  }
+
+  .breadcrumb {
+    margin-bottom: vw(12);
+  }
+
+  .reorderButton {
+    margin-top: vw(14);
+    padding: vw(10) vw(18);
+    font-size: vw(14);
   }
 
   .stateCard {

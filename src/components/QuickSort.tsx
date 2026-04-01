@@ -10,6 +10,20 @@ interface QuickSortProps {
 }
 
 export function QuickSort({ sortBy, onSortChange }: QuickSortProps) {
+  const nameButtons = [
+    {
+      value: "name-asc" as SortOption,
+      label: "A → Z",
+      icon: ArrowUp,
+      description: "За назвою (A → Z)",
+    },
+    {
+      value: "name-desc" as SortOption,
+      label: "A ← Z",
+      icon: ArrowDown,
+      description: "За назвою (Z → A)",
+    },
+  ];
   const priceButtons = [
     {
       value: "price-asc" as SortOption,
@@ -43,6 +57,24 @@ export function QuickSort({ sortBy, onSortChange }: QuickSortProps) {
   return (
     <div className={styles.panel}>
       <div className={styles.row}>
+        <div className={styles.group}>
+          {nameButtons.map((button) => {
+            const Icon = button.icon;
+            const isActive = sortBy === button.value;
+            return (
+              <button
+                key={button.value}
+                onClick={() => onSortChange(isActive ? "none" : button.value)}
+                className={`${styles.button} ${isActive ? styles.active : ""}`}
+                title={button.description}
+              >
+                <Icon className={styles.icon} />
+                {button.label}
+              </button>
+            );
+          })}
+        </div>
+
         <div className={styles.group}>
           {priceButtons.map((button) => {
             const Icon = button.icon;

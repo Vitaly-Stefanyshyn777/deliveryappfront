@@ -1,50 +1,41 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
-import { MapPin, Star } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { MapPin, Star, AlertCircle, Loader2 } from "lucide-react";
+import { useShops } from "@/hooks/useShops";
+import { useShopStore } from "@/stores/shopStore";
 import styles from "./ShopsListView.module.css";
 
-const DEMO_SHOPS = [
-  {
-    id: "761ed028-1003-43cd-aa26-26370908ab1d",
-    name: "Burger Express",
-    address: "Київ, Хрещатик 22",
-    rating: 4.9,
-  },
-  {
-    id: "ee2cdbe6-5e6c-4222-bde3-d1fc754d6007",
-    name: "Pizza Point",
-    address: "Львів, Шевченка 8",
-    rating: 4.8,
-  },
-  {
-    id: "15507b63-c0ab-4ae8-ba35-bb5bc9f834d1",
-    name: "Sushi Lane",
-    address: "Київ, Перемоги 15",
-    rating: 4.4,
-  },
-];
-
 export function ShopsListView() {
+  const router = useRouter();
+  const { setSelectedShopId } = useShopStore();
   const [ratingFilter, setRatingFilter] = useState<"all" | "4-5" | "3-4" | "2-3">(
     "all"
   );
 
-  const filteredShops = useMemo(() => {
-    return DEMO_SHOPS.filter((shop) => {
-      if (ratingFilter === "all") return true;
-      if (ratingFilter === "4-5") return shop.rating >= 4;
-      if (ratingFilter === "3-4") return shop.rating >= 3 && shop.rating < 4;
-      return shop.rating >= 2 && shop.rating < 3;
-    });
+  const ratingParams = useMemo(() => {
+    if (ratingFilter === "4-5") return { minRating: 4, maxRating: 5 };
+    if (ratingFilter === "3-4") return { minRating: 3, maxRating: 4 };
+    if (ratingFilter === "2-3") return { minRating: 2, maxRating: 3 };
+    return undefined;
   }, [ratingFilter]);
+
+  const { data, isLoading, error } = useShops(ratingParams);
+
+  const filteredShops = useMemo(() => {
+    return data || [];
+  }, [data]);
 
   return (
     <div className={styles.root}>
       <Header />
       <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.breadcrumb}>
+          <Breadcrumbs items={[{ label: "Головна", href: "/" }, { label: "Магазини" }]} />
+        </div>
         <div className={styles.headerCard}>
           <h1 className={styles.title}>Магазини</h1>
           <p className={styles.subtitle}>
@@ -72,21 +63,43 @@ export function ShopsListView() {
         </div>
 
         <div className={styles.grid}>
-          {filteredShops.map((s) => (
-            <Link key={s.id} href={`/shops/${s.id}`} className={styles.shopCard}>
-              <div className={styles.shopTitleRow}>
-                <h2 className={styles.shopName}>{s.name}</h2>
-                <span className={styles.rating}>
-                  <Star className={styles.ratingIcon} />
-                  {s.rating.toFixed(1)}
-                </span>
-              </div>
-              <div className={styles.address}>
-                <MapPin className={styles.addressIcon} />
-                <span>{s.address}</span>
-              </div>
-            </Link>
-          ))}
+          {isLoading ? (
+            <div className={styles.loadingCard}>
+              <Loader2 className={styles.spinner} />
+              <div>Завантаження магазинів...</div>
+            </div>
+          ) : error ? (
+            <div className={styles.loadingCard}>
+              <AlertCircle className={styles.stateIcon} />
+              <div>Не вдалося завантажити магазини</div>
+            </div>
+          ) : (
+            filteredShops.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={styles.shopCard}
+                onClick={() => {
+                  setSelectedShopId(s.id);
+                  router.push(`/shops/${s.id}`);
+                }}
+              >
+                <div className={styles.shopTitleRow}>
+                  <h2 className={styles.shopName}>{s.name}</h2>
+                  {typeof s.rating === "number" && (
+                    <span className={styles.rating}>
+                      <Star className={styles.ratingIcon} />
+                      {s.rating.toFixed(1)}
+                    </span>
+                  )}
+                </div>
+                <div className={styles.address}>
+                  <MapPin className={styles.addressIcon} />
+                  <span>{s.address}</span>
+                </div>
+              </button>
+            ))
+          )}
         </div>
       </div>
     </div>

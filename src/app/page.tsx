@@ -6,9 +6,17 @@ import {
   Truck,
   UtensilsCrossed,
 } from "lucide-react";
+import { apiClient } from "@/lib/api";
 import styles from "./page.module.css";
 
-export default function Home() {
+export default async function Home() {
+  let categories: string[] = [];
+  try {
+    categories = await apiClient.getProductCategories();
+  } catch {
+    categories = ["Бургери", "Піца", "Напої", "Десерти", "Салати"];
+  }
+
   return (
     <div className={styles.root}>
       <Header />
@@ -74,18 +82,16 @@ export default function Home() {
             </div>
           </div>
           <div className={styles.categoryGrid}>
-            {["Burgers", "Pizza", "Drinks", "Desserts", "Salads"].map(
-              (category) => (
-                <Link
-                  key={category}
-                  href={`/shop?category=${encodeURIComponent(category)}`}
-                  className={styles.categoryCard}
-                >
-                  <UtensilsCrossed className={styles.categoryIcon} />
-                  <span className={styles.categoryName}>{category}</span>
-                </Link>
-              )
-            )}
+            {categories.slice(0, 5).map((category) => (
+              <Link
+                key={category}
+                href={`/shop?category=${encodeURIComponent(category)}`}
+                className={styles.categoryCard}
+              >
+                <UtensilsCrossed className={styles.categoryIcon} />
+                <span className={styles.categoryName}>{category}</span>
+              </Link>
+            ))}
           </div>
         </section>
       </main>

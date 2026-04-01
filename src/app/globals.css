@@ -22,6 +22,29 @@ html {
   box-sizing: border-box;
 }
 
+/* Мінімальний reset, щоб браузерні дефолти не “вилазили” (бордери/заливки/фокус) */
+button,
+input,
+textarea,
+select {
+  color: inherit;
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+
+button {
+  padding: 0;
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
 body {
   min-height: 100vh;
   margin: 0;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 import { ProductFilters as ProductFiltersType, SortOption } from "@/types";
 import { useProductCategories } from "@/hooks/useProductCategories";
@@ -20,8 +20,16 @@ export function ProductFilters({
   const [searchQuery, setSearchQuery] = useState(filters.search || "");
   const { data: categories } = useProductCategories();
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    filters.categories || []
+    filters.categories || [],
   );
+  const [minPrice, setMinPrice] = useState<string>(
+    filters.minPrice !== undefined ? String(filters.minPrice) : "",
+  );
+  const [maxPrice, setMaxPrice] = useState<string>(
+    filters.maxPrice !== undefined ? String(filters.maxPrice) : "",
+  );
+  const PRICE_MIN = 0;
+  const PRICE_MAX = 2000;
   const hasAppliedCategory = Array.isArray(filters.categories)
     ? filters.categories.length > 0
     : false;
@@ -32,21 +40,53 @@ export function ProductFilters({
   const clearFilters = () => {
     setSearchQuery("");
     setSelectedCategories([]);
-    onFilterChange({ categories: [], category: undefined, search: undefined });
+    setMinPrice("");
+    setMaxPrice("");
+    onFilterChange({
+      categories: [],
+      category: undefined,
+      search: undefined,
+      minPrice: undefined,
+      maxPrice: undefined,
+    });
   };
 
   const hasActiveFilters =
-    (filters.categories?.length || 0) > 0 || !!filters.search;
+    (filters.categories?.length || 0) > 0 ||
+    !!filters.search ||
+    filters.minPrice !== undefined ||
+    filters.maxPrice !== undefined;
+
+  const normalizedSearch = useMemo(() => searchQuery.trim(), [searchQuery]);
+
+  useEffect(() => {
+    // Локальний UX: застосовуємо пошук автоматично з debounce
+    const t = window.setTimeout(() => {
+      onFilterChange({ search: normalizedSearch || undefined });
+    }, 250);
+    return () => window.clearTimeout(t);
+  }, [normalizedSearch, onFilterChange]);
+
+  useEffect(() => {
+    // Синхронізуємо локальний стан з URL/зовнішніми змінами, щоб фільтри не "зникали"
+    setSearchQuery(filters.search || "");
+    setSelectedCategories(filters.categories || []);
+    setMinPrice(filters.minPrice !== undefined ? String(filters.minPrice) : "");
+    setMaxPrice(filters.maxPrice !== undefined ? String(filters.maxPrice) : "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    filters.search,
+    JSON.stringify(filters.categories || []),
+    filters.minPrice,
+    filters.maxPrice,
+  ]);
 
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
         <h2 className={styles.title}>Фільтри</h2>
         {hasActiveFilters && (
-          <button
-            onClick={clearFilters}
-            className={styles.clear}
-          >
+          <button onClick={clearFilters} className={styles.clear}>
             <X className={styles.clearIcon} />
             Очистити
           </button>
@@ -64,7 +104,7 @@ export function ProductFilters({
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                onFilterChange({ search: searchQuery || undefined });
+                onFilterChange({ search: normalizedSearch || undefined });
               }
             }}
             className={styles.searchBox}
@@ -105,7 +145,9 @@ export function ProductFilters({
             onClick={clearFilters}
             disabled={!hasAppliedCategory}
             className={`${styles.button} ${
-              hasAppliedCategory ? styles.buttonSecondary : styles.buttonDisabled
+              hasAppliedCategory
+                ? styles.buttonSecondary
+                : styles.buttonDisabled
             }`}
             type="button"
           >
@@ -129,6 +171,94 @@ export function ProductFilters({
           </button>
         </div>
       </div>
+      {/* 
+      <div className={styles.group}>
+        <h3 className={styles.groupTitle}>Ціна</h3>
+        <div className={styles.priceRow}>
+          <input
+            type="number"
+            inputMode="numeric"
+            placeholder="від"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className={styles.priceInput}
+          />
+          <span className={styles.priceDash}>—</span>
+          <input
+            type="number"
+            inputMode="numeric"
+            placeholder="до"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className={styles.priceInput}
+          />
+        </div>
+        <div className={styles.priceRangeWrap}>
+          <input
+            type="range"
+            min={PRICE_MIN}
+            max={PRICE_MAX}
+            step={10}
+            value={minPrice ? Number(minPrice) : PRICE_MIN}
+            onChange={(e) => {
+              const nextMin = Number(e.target.value);
+              const currentMax = maxPrice ? Number(maxPrice) : PRICE_MAX;
+              if (nextMin > currentMax) {
+                setMinPrice(String(currentMax));
+              } else {
+                setMinPrice(String(nextMin));
+              }
+            }}
+            className={styles.priceRange}
+            aria-label="Мінімальна ціна"
+          />
+          <input
+            type="range"
+            min={PRICE_MIN}
+            max={PRICE_MAX}
+            step={10}
+            value={maxPrice ? Number(maxPrice) : PRICE_MAX}
+            onChange={(e) => {
+              const nextMax = Number(e.target.value);
+              const currentMin = minPrice ? Number(minPrice) : PRICE_MIN;
+              if (nextMax < currentMin) {
+                setMaxPrice(String(currentMin));
+              } else {
+                setMaxPrice(String(nextMax));
+              }
+            }}
+            className={`${styles.priceRange} ${styles.priceRangeTop}`}
+            aria-label="Максимальна ціна"
+          />
+        </div>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.buttonSecondary}`}
+            onClick={() => {
+              setMinPrice("");
+              setMaxPrice("");
+              onFilterChange({ minPrice: undefined, maxPrice: undefined });
+            }}
+          >
+            Скинути
+          </button>
+          <button
+            type="button"
+            className={`${styles.button} ${styles.buttonPrimary}`}
+            onClick={() => {
+              const min = minPrice.trim() ? Number(minPrice) : undefined;
+              const max = maxPrice.trim() ? Number(maxPrice) : undefined;
+              onFilterChange({
+                minPrice: Number.isFinite(min as number) ? min : undefined,
+                maxPrice: Number.isFinite(max as number) ? max : undefined,
+              });
+            }}
+          >
+            Застосувати
+          </button>
+        </div>
+      </div> */}
     </div>
   );
 }

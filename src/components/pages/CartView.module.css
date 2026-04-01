@@ -68,6 +68,10 @@
   margin-bottom: 32px;
 }
 
+.breadcrumb {
+  margin-bottom: 16px;
+}
+
 .layout {
   display: grid;
   gap: 32px;
@@ -98,6 +102,14 @@
   gap: 4px;
   font-size: 14px;
   color: #ef4444;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.clearCart:hover {
+  background: #fef2f2;
 }
 
 .clearIcon {
@@ -158,10 +170,17 @@
 .couponRow {
   display: flex;
   gap: 8px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  border: none;
+  flex-direction: column;
+  width: 100%;
 }
 
 .couponInput {
-  flex: 1;
+  width: 100%;
   padding: 14px 16px;
   border: 1px solid #d1d5db;
   border-radius: 16px;
@@ -169,11 +188,12 @@
 }
 
 .couponButton {
+  width: 100%;
   padding: 14px 16px;
   border: 1px solid #d1d5db;
   border-radius: 16px;
-  background: #fff;
-  color: #111827;
+  background: #f97316;
+  color: #fff;
 }
 
 .couponButton:hover {
@@ -223,6 +243,10 @@
 
   .headingBlock {
     margin-bottom: vw(24);
+  }
+
+  .breadcrumb {
+    margin-bottom: vw(12);
   }
 
   .title {

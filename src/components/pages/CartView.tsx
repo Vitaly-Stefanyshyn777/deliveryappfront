@@ -4,33 +4,42 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Trash2 } from "lucide-react";
 import { Header } from "@/components/Header";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CartItem } from "@/components/CartItem";
 import { OrderForm } from "@/components/OrderForm";
 import { useCartStore } from "@/stores/cartStore";
+import { useShopStore } from "@/stores/shopStore";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { useValidateCoupon } from "@/hooks/useCoupons";
-import { Coupon } from "@/types";
+import { Coupon, OrderFormData } from "@/types";
+import { apiClient } from "@/lib/api";
 import styles from "./CartView.module.css";
 
 export function CartView() {
   const router = useRouter();
   const { items, clearCart, getTotalPrice, getTotalItems } = useCartStore();
+  const { selectedShopId } = useShopStore();
   const createOrderMutation = useCreateOrder();
   const validateCoupon = useValidateCoupon();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [couponInfo, setCouponInfo] = useState<Coupon | null>(null);
+  const [productCategoryById, setProductCategoryById] = useState<Record<string, string>>({});
 
-  const handleSubmitOrder = async (formData: {
-    deliveryAddr: string;
-    deliveryAt: string;
-  }) => {
+  const handleSubmitOrder = async (formData: OrderFormData) => {
     if (items.length === 0) return;
     setIsSubmitting(true);
     try {
-      const shopId = "761ed028-1003-43cd-aa26-26370908ab1d";
+      const shopId = selectedShopId;
+      if (!shopId) {
+        alert("Спочатку оберіть магазин.");
+        router.push("/shops");
+        return;
+      }
       const orderData = {
         shopId,
+        customerEmail: formData.email,
+        customerPhone: formData.phone,
         deliveryAddr: formData.deliveryAddr,
         deliveryAt: formData.deliveryAt,
         userTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -57,6 +66,9 @@ export function CartView() {
       <div className={styles.root}>
         <Header />
         <div className={`${styles.container} ${styles.page}`}>
+          <div className={styles.breadcrumb}>
+            <Breadcrumbs items={[{ label: "Головна", href: "/" }, { label: "Кошик" }]} />
+          </div>
           <div className={styles.emptyCard}>
             <ShoppingCart className={styles.emptyIcon} />
             <h1 className={styles.title}>Ваш кошик порожній</h1>
@@ -79,6 +91,9 @@ export function CartView() {
     <div className={styles.root}>
       <Header />
       <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.breadcrumb}>
+          <Breadcrumbs items={[{ label: "Головна", href: "/" }, { label: "Кошик" }]} />
+        </div>
         <div className={styles.headingBlock}>
           <h1 className={styles.title}>Кошик ({getTotalItems()} товарів)</h1>
           <p className={styles.subtitle}>
@@ -126,10 +141,61 @@ export function CartView() {
                       className={styles.couponButton}
                       onClick={async () => {
                         try {
+                          const trimmed = couponCode.trim();
+                          if (!trimmed) return;
+
                           const data = await validateCoupon.mutateAsync({
-                            code: couponCode,
+                            code: trimmed,
                             total: getTotalPrice(),
                           });
+
+                          if (data.appliesToProductId) {
+                            const ok = items.some((i) => i.productId === data.appliesToProductId);
+                            if (!ok) {
+                              setCouponInfo(null);
+                              alert("Цей купон застосовується лише до конкретного товару, якого немає в кошику.");
+                              return;
+                            }
+                          }
+
+                          if (data.appliesToCategory) {
+                            const uniqueIds = Array.from(new Set(items.map((i) => i.productId)));
+                            const missing = uniqueIds.filter((id) => !productCategoryById[id]);
+                            if (missing.length) {
+                              const products = await Promise.all(
+                                missing.map(async (id) => {
+                                  try {
+                                    return await apiClient.getProduct(id);
+                                  } catch {
+                                    return null;
+                                  }
+                                })
+                              );
+                              const patch: Record<string, string> = {};
+                              for (const p of products) {
+                                if (p?.id && p.category) patch[p.id] = p.category;
+                              }
+                              if (Object.keys(patch).length) {
+                                setProductCategoryById((prev) => ({ ...prev, ...patch }));
+                              }
+
+                              const merged = { ...productCategoryById, ...patch };
+                              const ok = items.some((i) => merged[i.productId] === data.appliesToCategory);
+                              if (!ok) {
+                                setCouponInfo(null);
+                                alert(`Купон застосовується лише до категорії "${data.appliesToCategory}". У кошику немає товарів цієї категорії.`);
+                                return;
+                              }
+                            } else {
+                              const ok = items.some((i) => productCategoryById[i.productId] === data.appliesToCategory);
+                              if (!ok) {
+                                setCouponInfo(null);
+                                alert(`Купон застосовується лише до категорії "${data.appliesToCategory}". У кошику немає товарів цієї категорії.`);
+                                return;
+                              }
+                            }
+                          }
+
                           setCouponInfo(data);
                         } catch {
                           setCouponInfo(null);

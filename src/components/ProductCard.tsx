@@ -13,7 +13,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCartStore();
-  const { isFavorite, toggleFavorite } = useFavoritesStore();
+  const { isFavorite, toggleFavorite, removeFromFavorites } = useFavoritesStore();
 
   const handleAddToCart = () => {
     addItem({
@@ -22,6 +22,7 @@ export function ProductCard({ product }: ProductCardProps) {
       price: product.price,
       imageUrl: product.imageUrl,
     });
+    if (isFavorite(product.id)) removeFromFavorites(product.id);
   };
 
   const handleToggleFavorite = () => {
@@ -52,9 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Бейджі: Новинка / -% / Хіт */}
         <div className={styles.tags}>
           {product.isNew && (
-            <span className={`${styles.tag} ${styles.tagNew}`}>
-              Новинка
-            </span>
+            <span className={`${styles.tag} ${styles.tagNew}`}>Новинка</span>
           )}
           {discountPercent > 0 && (
             <span className={`${styles.tag} ${styles.tagDiscount}`}>
@@ -62,9 +61,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
           {product.isHit && (
-            <span className={`${styles.tag} ${styles.tagHit}`}>
-              Хіт
-            </span>
+            <span className={`${styles.tag} ${styles.tagHit}`}>Хіт</span>
           )}
         </div>
 
@@ -74,7 +71,9 @@ export function ProductCard({ product }: ProductCardProps) {
         >
           <Heart
             className={`${styles.favoriteIcon} ${
-              isFavorite(product.id) ? styles.favoriteActive : styles.favoriteInactive
+              isFavorite(product.id)
+                ? styles.favoriteActive
+                : styles.favoriteInactive
             }`}
           />
         </button>
@@ -85,29 +84,20 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className={styles.category}>{product.category}</span>
         </div>
 
-        <h3 className={styles.title}>
-          {product.name}
-        </h3>
+        <h3 className={styles.title}>{product.name}</h3>
 
-        <p className={styles.description}>
-          {product.description}
-        </p>
+        <p className={styles.description}>{product.description}</p>
 
         <div className={styles.footer}>
           <div className={styles.priceGroup}>
-            <span className={styles.price}>
-              {product.price} ₴
-            </span>
+            <span className={styles.price}>{product.price} ₴</span>
             {product.priceOriginal && product.priceOriginal > product.price && (
-              <span className={styles.priceOld}>
-                {product.priceOriginal} ₴
-              </span>
+              <span className={styles.priceOld}>{product.priceOriginal} ₴</span>
             )}
           </div>
 
           <button onClick={handleAddToCart} className={styles.button}>
             <ShoppingCart className={styles.buttonIcon} />
-            <span>В кошик</span>
           </button>
         </div>
       </div>

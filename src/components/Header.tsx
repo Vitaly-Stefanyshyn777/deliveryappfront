@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ShoppingCart, Heart, UtensilsCrossed, Menu, X } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { useFavoritesStore } from "@/stores/favoritesStore";
@@ -8,6 +9,7 @@ import { useEffect, useState } from "react";
 import styles from "./Header.module.css";
 
 export function Header() {
+  const pathname = usePathname();
   const { getTotalItems } = useCartStore();
   const { favoriteIds } = useFavoritesStore();
   const [isHydrated, setIsHydrated] = useState(false);
@@ -26,6 +28,11 @@ export function Header() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [mobileMenuOpen]);
 
+  useEffect(() => {
+    // На зміну маршруту — закриваємо меню, щоб не блокувати скрол
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -42,9 +49,7 @@ export function Header() {
             <Link href="/shop" className={styles.navLink}>
               Магазин
             </Link>
-            <Link href="/cart" className={styles.navLink}>
-              Кошик
-            </Link>
+
             <Link href="/orders" className={styles.navLink}>
               Мої замовлення
             </Link>

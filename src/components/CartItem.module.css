@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px 0;
+  padding: 16px;
 }
 
 .imageWrap {
@@ -43,14 +43,18 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  border: 1px solid rgba(31, 41, 55, 0.08);
-  border-radius: 9999px;
+
   background: #fff;
 }
 
 .qtyButton {
   padding: 8px;
+  border-radius: 15px;
+  border: none;
   color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .qtyIcon {
@@ -66,21 +70,29 @@
   width: 32px;
   text-align: center;
   font-weight: 600;
+  transition: background 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .removeButton {
   padding: 8px;
-  border-radius: 9999px;
+  border-radius: 15px;
   color: #ef4444;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.removeButton:hover {
+  background: #fef2f2;
 }
 
 .removeIcon {
   width: 16px;
   height: 16px;
-}
-
-.removeButton:hover {
-  background: #fef2f2;
 }
 
 .total {

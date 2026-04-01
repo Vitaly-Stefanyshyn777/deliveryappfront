@@ -4,7 +4,6 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { Calendar, MapPin, Mail, Phone } from "lucide-react";
 import { OrderFormData } from "@/types";
-import { CaptchaModal } from "./CaptchaModal";
 import styles from "./OrderForm.module.css";
 
 interface OrderFormProps {
@@ -63,7 +62,7 @@ export function OrderForm({ onSubmit, isSubmitting }: OrderFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      setCaptchaOpen(true);
+      onSubmit(formData);
     }
   };
 
@@ -84,7 +83,6 @@ export function OrderForm({ onSubmit, isSubmitting }: OrderFormProps) {
   );
   const [geo, setGeo] = useState<{ lat: number; lng: number } | null>(null);
   const [isMapOpen, setIsMapOpen] = useState(false);
-  const [captchaOpen, setCaptchaOpen] = useState(false);
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -204,15 +202,6 @@ export function OrderForm({ onSubmit, isSubmitting }: OrderFormProps) {
       >
         {isSubmitting ? "Створюємо замовлення..." : "Оформити замовлення"}
       </button>
-      <CaptchaModal
-        open={captchaOpen}
-        onClose={() => setCaptchaOpen(false)}
-        onSuccess={() => {
-          setCaptchaOpen(false);
-          onSubmit(formData);
-        }}
-        title="Підтвердіть створення замовлення"
-      />
     </form>
   );
 }

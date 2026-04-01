@@ -20,6 +20,7 @@ export interface Shop {
   id: string;
   name: string;
   address: string;
+  rating?: number;
   latitude: number;
   longitude: number;
   createdAt: string;
@@ -29,16 +30,21 @@ export interface Shop {
 // Типи для позицій замовлення
 export interface OrderItem {
   id?: string;
+  orderId?: string;
   productId: string;
   name: string;
   qty: number;
   price: number;
+  product?: Product;
 }
 
 // Типи для замовлень
 export interface Order {
   id: string;
   shopId: string;
+  userId?: string | number | null;
+  customerEmail?: string | null;
+  customerPhone?: string | null;
   totalPrice: number;
   deliveryAddr: string;
   deliveryAtUTC: string;
@@ -83,6 +89,8 @@ export interface ProductFilters {
   category?: string;
   categories?: string[];
   search?: string;
+  minPrice?: number;
+  maxPrice?: number;
   isActive?: boolean;
   isHit?: boolean;
   isNew?: boolean;
@@ -99,6 +107,8 @@ export type SortOption =
   | "price-desc"
   | "date-asc"
   | "date-desc"
+  | "name-asc"
+  | "name-desc"
   | "discount-desc"
   | "favorites-first";
 

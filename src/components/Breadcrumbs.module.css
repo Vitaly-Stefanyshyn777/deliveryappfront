@@ -1,6 +1,7 @@
 .nav {
   font-size: 14px;
   color: #6b7280;
+  margin-bottom: 30px;
 }
 
 .list {
@@ -8,6 +9,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .item {

@@ -7,6 +7,11 @@
 - **Рівень:** Advanced
 - **Покрито:** shops page, shopping cart page, responsive design, category filtering, sorting, rating filter for shops, pagination, order history search, reorder previous order, coupons page
 
+## 🔗 Посилання
+
+- **Репозиторій**: (додайте URL вашого репозиторію)
+- **Live demo**: (додайте публічний URL задеплоєного застосунку)
+
 ## ✨ Функціональність
 
 ### 🏪 **Сторінка квіткового магазину**

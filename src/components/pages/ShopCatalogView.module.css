@@ -3,13 +3,12 @@
 }
 
 .container {
-  width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
 .page {
-  padding: 24px 0 64px;
+  padding: 24px 64px;
 }
 
 .layout {
@@ -27,7 +26,7 @@
 }
 
 .breadcrumb {
-  margin-bottom: 16px;
+  margin-bottom: 36px;
 }
 
 .sectionHeader {
@@ -90,7 +89,7 @@
 
 .grid {
   display: grid;
-  gap: 24px;
+  gap: 16px;
   margin-bottom: 32px;
 }
 
@@ -117,22 +116,16 @@
   border-color: #f97316;
 }
 
-@media (min-width: 1024px) {
-  .page {
-    padding: 32px 0 80px;
-  }
+.layout {
+  flex-direction: row;
+}
 
-  .layout {
-    flex-direction: row;
-  }
+.sidebar {
+  width: 300px;
+}
 
-  .sidebar {
-    width: 300px;
-  }
-
-  .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+.grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 @media (max-width: 1200px) {

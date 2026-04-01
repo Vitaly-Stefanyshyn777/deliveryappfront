@@ -28,6 +28,10 @@
   margin-bottom: 32px;
 }
 
+.breadcrumb {
+  margin-bottom: 16px;
+}
+
 .loaderRow {
   display: flex;
   align-items: center;
@@ -67,7 +71,7 @@
 
 .searchWrap {
   position: relative;
-  max-width: 420px;
+
   margin-bottom: 24px;
 }
 
@@ -127,6 +131,23 @@
   margin-bottom: 12px;
 }
 
+.reorderButton {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.reorderButton:hover {
+  background: #f97316;
+  border-color: #f97316;
+  color: #fff;
+}
+
 .orderTitle {
   margin: 0;
   font-size: 18px;
@@ -156,6 +177,33 @@
 .metaIcon {
   width: 16px;
   height: 16px;
+}
+
+.orderItemsPreview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.previewThumb {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(31, 41, 55, 0.08);
+}
+
+.previewImage {
+  object-fit: cover;
+}
+
+.previewCount {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
 }
 
 .pagination {
@@ -208,6 +256,10 @@
     margin-bottom: vw(24);
   }
 
+  .breadcrumb {
+    margin-bottom: vw(12);
+  }
+
   .title {
     font-size: vw(34);
   }
@@ -246,8 +298,29 @@
     gap: vw(10);
   }
 
+  .orderItemsPreview {
+    gap: vw(10);
+    margin-top: vw(10);
+  }
+
+  .previewThumb {
+    width: vw(40);
+    height: vw(40);
+    border-radius: vw(12);
+  }
+
+  .previewCount {
+    font-size: vw(13);
+  }
+
   .pageButton {
     padding: vw(8) vw(12);
+    font-size: vw(13);
+  }
+
+  .reorderButton {
+    margin-top: vw(10);
+    padding: vw(8) vw(14);
     font-size: vw(13);
   }
 }

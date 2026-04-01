@@ -9,6 +9,10 @@ interface FavoritesStore {
   toggleFavorite: (productId: string) => void;
 }
 
+function uniq(ids: string[]): string[] {
+  return Array.from(new Set(ids));
+}
+
 export const useFavoritesStore = create<FavoritesStore>()(
   persist(
     (set, get) => ({
@@ -16,9 +20,7 @@ export const useFavoritesStore = create<FavoritesStore>()(
 
       addToFavorites: (productId) => {
         const { favoriteIds } = get();
-        if (!favoriteIds.includes(productId)) {
-          set({ favoriteIds: [...favoriteIds, productId] });
-        }
+        if (!favoriteIds.includes(productId)) set({ favoriteIds: uniq([...favoriteIds, productId]) });
       },
 
       removeFromFavorites: (productId) => {
@@ -42,6 +44,14 @@ export const useFavoritesStore = create<FavoritesStore>()(
     }),
     {
       name: "favorites-storage",
+      version: 1,
+      onRehydrateStorage: () => (state) => {
+        if (!state?.favoriteIds?.length) return;
+        const deduped = uniq(state.favoriteIds);
+        if (deduped.length !== state.favoriteIds.length) {
+          useFavoritesStore.setState({ favoriteIds: deduped }, true);
+        }
+      },
     }
   )
 );

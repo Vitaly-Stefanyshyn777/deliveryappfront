@@ -7,6 +7,15 @@ interface CartStore {
   addItem: (item: Omit<CartItem, "qty">) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, qty: number) => void;
+  addOrderItems: (
+    items: {
+      productId: string;
+      name: string;
+      price: number;
+      qty: number;
+      imageUrl?: string;
+    }[]
+  ) => void;
   clearCart: () => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
@@ -53,6 +62,30 @@ export const useCartStore = create<CartStore>()(
             item.productId === productId ? { ...item, qty } : item
           ),
         });
+      },
+
+      addOrderItems: (orderItems) => {
+        const { items } = get();
+        const map = new Map<string, CartItem>();
+        items.forEach((i) => map.set(i.productId, { ...i }));
+
+        orderItems.forEach((o) => {
+          const existing = map.get(o.productId);
+          if (existing) {
+            existing.qty += o.qty;
+            if (!existing.imageUrl && o.imageUrl) existing.imageUrl = o.imageUrl;
+          } else {
+            map.set(o.productId, {
+              productId: o.productId,
+              name: o.name,
+              price: o.price,
+              qty: o.qty,
+              imageUrl: o.imageUrl || "",
+            });
+          }
+        });
+
+        set({ items: Array.from(map.values()) });
       },
 
       clearCart: () => {

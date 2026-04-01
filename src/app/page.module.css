@@ -18,7 +18,11 @@
   border-radius: 32px;
   padding: 24px;
   color: #fff;
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.96), rgba(234, 88, 12, 0.92));
+  background: linear-gradient(
+    135deg,
+    rgba(249, 115, 22, 0.96),
+    rgba(234, 88, 12, 0.92)
+  );
   box-shadow: 0 25px 70px rgba(249, 115, 22, 0.24);
 }
 
@@ -36,6 +40,7 @@
   font-size: 12px;
   font-weight: 700;
   background: rgba(255, 255, 255, 0.15);
+  display: none;
 }
 
 .heroTitle {

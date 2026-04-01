@@ -1,16 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import { format } from "date-fns";
 import { uk } from "date-fns/locale";
-import { MapPin, Calendar, Package, CreditCard } from "lucide-react";
+import { MapPin, Calendar, Package, CreditCard, User } from "lucide-react";
 import { Order } from "@/types";
 import styles from "./OrderDetails.module.css";
 
 interface OrderDetailsProps {
   order: Order;
+  imageByProductId?: Record<string, string>;
 }
 
-export function OrderDetails({ order }: OrderDetailsProps) {
+export function OrderDetails({ order, imageByProductId }: OrderDetailsProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return format(date, "dd MMMM yyyy, HH:mm", { locale: uk });
@@ -26,6 +28,32 @@ export function OrderDetails({ order }: OrderDetailsProps) {
       </div>
 
       <div className={styles.body}>
+        {(order.userId || order.customerEmail || order.customerPhone) && (
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>
+              <User className={styles.icon} />
+              Клієнт
+            </h2>
+            <div className={styles.list}>
+              {order.userId && (
+                <p className={styles.itemMeta}>
+                  ID користувача: <span className={styles.itemName}>{String(order.userId)}</span>
+                </p>
+              )}
+              {order.customerEmail && (
+                <p className={styles.itemMeta}>
+                  Email: <span className={styles.itemName}>{order.customerEmail}</span>
+                </p>
+              )}
+              {order.customerPhone && (
+                <p className={styles.itemMeta}>
+                  Телефон: <span className={styles.itemName}>{order.customerPhone}</span>
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>
             <Package className={styles.icon} />
@@ -68,6 +96,17 @@ export function OrderDetails({ order }: OrderDetailsProps) {
                 key={item.id}
                 className={styles.item}
               >
+                {item.product?.imageUrl || imageByProductId?.[item.productId] ? (
+                  <div className={styles.itemImageWrap}>
+                    <Image
+                      src={item.product?.imageUrl || imageByProductId?.[item.productId] || ""}
+                      alt={item.name}
+                      fill
+                      sizes="56px"
+                      className={styles.itemImage}
+                    />
+                  </div>
+                ) : null}
                 <div className={styles.itemContent}>
                   <h3 className={styles.itemName}>{item.name}</h3>
                   <p className={styles.itemMeta}>

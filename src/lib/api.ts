@@ -30,6 +30,7 @@ class ApiClient {
     const url = `${this.baseUrl}${endpoint}`;
 
     const config: RequestInit = {
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
@@ -89,6 +90,17 @@ class ApiClient {
     return this.request<Shop>(`/shops/${id}`);
   }
 
+  async getShops(params?: {
+    minRating?: number;
+    maxRating?: number;
+  }): Promise<Shop[]> {
+    const qs = new URLSearchParams();
+    if (params?.minRating !== undefined) qs.append("minRating", String(params.minRating));
+    if (params?.maxRating !== undefined) qs.append("maxRating", String(params.maxRating));
+    const endpoint = qs.toString() ? `/shops?${qs.toString()}` : "/shops";
+    return this.request<Shop[]>(endpoint);
+  }
+
   async createOrder(orderData: CreateOrderRequest): Promise<Order> {
     return this.request<Order>("/orders", {
       method: "POST",
@@ -123,8 +135,10 @@ export async function getActiveCoupons(): Promise<Coupon[]> {
 
 export async function validateCoupon(
   code: string,
-  total: number
+  total: number,
+  cartId?: string
 ): Promise<Coupon> {
   const params = new URLSearchParams({ code, total: String(total) });
+  if (cartId) params.set("cartId", cartId);
   return apiClient["request"]<Coupon>(`/coupons/validate?${params.toString()}`);
 }

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Header } from "@/components/Header";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { useActiveCoupons } from "@/hooks/useCoupons";
 import styles from "./CouponsView.module.css";
 
@@ -12,6 +13,9 @@ export function CouponsView() {
     <div className={styles.root}>
       <Header />
       <div className={`${styles.container} ${styles.page}`}>
+        <div className={styles.breadcrumb}>
+          <Breadcrumbs items={[{ label: "Головна", href: "/" }, { label: "Купони" }]} />
+        </div>
         <div className={styles.heroCard}>
           <h1 className={styles.title}>Активні купони</h1>
           <p className={styles.subtitle}>
