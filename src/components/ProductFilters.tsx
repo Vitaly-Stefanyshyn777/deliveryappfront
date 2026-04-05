@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Search, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Search, X } from "lucide-react";
 import { ProductFilters as ProductFiltersType, SortOption } from "@/types";
 import { useProductCategories } from "@/hooks/useProductCategories";
 import styles from "./ProductFilters.module.css";
@@ -28,6 +28,16 @@ export function ProductFilters({
   const [maxPrice, setMaxPrice] = useState<string>(
     filters.maxPrice !== undefined ? String(filters.maxPrice) : "",
   );
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setFiltersExpanded(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   const PRICE_MIN = 0;
   const PRICE_MAX = 2000;
   const hasAppliedCategory = Array.isArray(filters.categories)
@@ -84,7 +94,22 @@ export function ProductFilters({
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
-        <h2 className={styles.title}>Фільтри</h2>
+        <div className={styles.headerTitleRow}>
+          <button
+            type="button"
+            className={styles.toggleFilters}
+            onClick={() => setFiltersExpanded((v) => !v)}
+            aria-expanded={filtersExpanded}
+            aria-controls="filters-collapsible"
+          >
+            {filtersExpanded ? (
+              <ChevronUp className={styles.toggleIcon} aria-hidden />
+            ) : (
+              <ChevronDown className={styles.toggleIcon} aria-hidden />
+            )}
+          </button>
+          <h2 className={styles.title}>Фільтри</h2>
+        </div>
         {hasActiveFilters && (
           <button onClick={clearFilters} className={styles.clear}>
             <X className={styles.clearIcon} />
@@ -93,6 +118,12 @@ export function ProductFilters({
         )}
       </div>
 
+      <div
+        id="filters-collapsible"
+        className={`${styles.collapsible} ${
+          filtersExpanded ? "" : styles.collapsibleClosed
+        }`}
+      >
       <div className={styles.group}>
         <div className={styles.searchWrap}>
           <Search className={styles.searchIcon} />
@@ -170,6 +201,7 @@ export function ProductFilters({
             Застосувати
           </button>
         </div>
+      </div>
       </div>
       {/* 
       <div className={styles.group}>

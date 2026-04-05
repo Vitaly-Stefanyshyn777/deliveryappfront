@@ -73,7 +73,11 @@ export function FavoritesView() {
             </div>
             <div className={styles.grid}>
               {favoriteProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  removeFromFavoritesOnAddToCart
+                />
               ))}
             </div>
           </>

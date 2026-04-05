@@ -1,23 +1,85 @@
 .panel {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   padding: 24px;
   background: #fff;
   border: 1px solid rgba(31, 41, 55, 0.08);
   border-radius: 24px;
   box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
-  width: 300px;
+}
+
+@media (min-width: 1024px) {
+  .panel {
+    max-width: 300px;
+  }
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.headerTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.toggleFilters {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid rgba(31, 41, 55, 0.1);
+  background: #f9fafb;
+  color: #374151;
+}
+
+.toggleFilters:hover {
+  border-color: rgba(249, 115, 22, 0.35);
+  background: #fff6ed;
+  color: #f97316;
+}
+
+.toggleIcon {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 1023px) {
+  .toggleFilters {
+    display: inline-flex;
+  }
+}
+
+.collapsibleClosed {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .collapsibleClosed {
+    display: block !important;
+  }
+
+  .toggleFilters {
+    display: none !important;
+  }
 }
 
 .title {
   font-size: 18px;
   font-weight: 700;
   color: #111827;
+  margin: 0;
 }
 
 .clear {

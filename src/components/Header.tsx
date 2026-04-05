@@ -33,6 +33,15 @@ export function Header() {
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileMenuOpen]);
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -61,17 +70,15 @@ export function Header() {
           <div className={styles.actions}>
             <button
               type="button"
-              className={styles.burgerButton}
-              aria-label={mobileMenuOpen ? "Закрити меню" : "Відкрити меню"}
+              className={`${styles.burgerButton} ${
+                mobileMenuOpen ? styles.burgerHidden : ""
+              }`}
+              aria-label="Відкрити меню"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-nav"
-              onClick={() => setMobileMenuOpen((v) => !v)}
+              onClick={() => setMobileMenuOpen(true)}
             >
-              {mobileMenuOpen ? (
-                <X className={styles.icon} />
-              ) : (
-                <Menu className={styles.icon} />
-              )}
+              <Menu className={styles.icon} />
             </button>
 
             <Link href="/favorites" className={styles.iconButton}>
@@ -106,6 +113,17 @@ export function Header() {
           }}
         >
           <div className={styles.mobileMenuPanel} id="mobile-nav">
+            <div className={styles.mobileMenuHeader}>
+              <span className={styles.mobileMenuTitle}>Меню</span>
+              <button
+                type="button"
+                className={styles.mobileMenuClose}
+                aria-label="Закрити меню"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <X className={styles.icon} />
+              </button>
+            </div>
             <nav className={styles.mobileNav}>
               <Link
                 href="/shops"
@@ -120,6 +138,13 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Магазин
+              </Link>
+              <Link
+                href="/favorites"
+                className={styles.mobileNavLink}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Улюблені
               </Link>
               <Link
                 href="/cart"

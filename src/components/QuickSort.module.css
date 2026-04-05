@@ -1,16 +1,8 @@
-.panel {
-  width: 100%;
-  padding: 16px;
-  background: #fff;
-  border: 1px solid rgba(31, 41, 55, 0.08);
-  border-radius: 24px;
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
-}
-
+/* Спільне для кнопок сортування (і в десктоп-панелі, і в мобільній модалці) */
 .row {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: stretch;
+  justify-content: flex-start;
   gap: 16px;
   flex-wrap: wrap;
 }
@@ -45,4 +37,181 @@
 .icon {
   width: 16px;
   height: 16px;
+}
+
+/* Десктоп: за замовчуванням приховано на мобілці */
+.desktopOnly {
+  display: none;
+}
+
+/* Мобілка: за замовчуванням приховано на десктопі */
+.mobileOnly {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .mobileOnly {
+    display: block;
+    width: 100%;
+  }
+
+  .mobileTrigger {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(31, 41, 55, 0.1);
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  .mobileTrigger:hover {
+    border-color: rgba(249, 115, 22, 0.35);
+    background: #fff8f1;
+  }
+
+  .mobileTriggerIcon {
+    width: 20px;
+    height: 20px;
+    color: #f97316;
+    flex-shrink: 0;
+  }
+
+  .mobileTriggerText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .modalOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 950;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  .modalSheet {
+    width: 100%;
+    max-height: min(88dvh, 640px);
+    border-radius: 24px 24px 0 0;
+    background: #fff;
+    box-shadow: 0 -12px 40px rgba(15, 23, 42, 0.18);
+    display: flex;
+    flex-direction: column;
+    animation: sheetUp 0.25s ease-out;
+  }
+
+  @keyframes sheetUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0.9;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid rgba(31, 41, 55, 0.08);
+    flex-shrink: 0;
+  }
+
+  .modalTitle {
+    font-size: 18px;
+    font-weight: 800;
+    color: #111827;
+  }
+
+  .modalClose {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    border: 1px solid rgba(31, 41, 55, 0.1);
+    background: #f9fafb;
+    color: #374151;
+  }
+
+  .modalClose:hover {
+    background: #fff1e8;
+    border-color: rgba(249, 115, 22, 0.35);
+    color: #f97316;
+  }
+
+  .modalBody {
+    overflow: auto;
+    padding: 12px 16px 24px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .panelModal {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    background: #f9fafb;
+    border: 1px solid rgba(31, 41, 55, 0.06);
+    border-radius: 16px;
+  }
+
+  .panelModal .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .panelModal .group {
+    justify-content: flex-start;
+  }
+
+  .modalClose .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .desktopOnly {
+    display: block;
+  }
+
+  .mobileOnly {
+    display: none !important;
+  }
+
+  .modalOverlay {
+    display: none !important;
+  }
+
+  .panel {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid rgba(31, 41, 55, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+  }
+
+  .desktopOnly .row {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
 }

@@ -1,7 +1,7 @@
 .header {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 100;
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.75);
@@ -44,49 +44,119 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  color: #4b5563;
-  border-radius: 9999px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  color: #374151;
+  border-radius: 14px;
+  border: 1px solid rgba(31, 41, 55, 0.1);
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .burgerButton:hover {
   color: #f97316;
-  background: rgba(249, 115, 22, 0.08);
+  border-color: rgba(249, 115, 22, 0.35);
+  background: #fff8f1;
+  box-shadow: 0 6px 18px rgba(249, 115, 22, 0.12);
+}
+
+.burgerHidden {
+  display: none !important;
 }
 
 .mobileMenuOverlay {
   position: fixed;
   inset: 0;
-  z-index: 80;
-  background: rgba(0, 0, 0, 0.32);
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  background: rgba(15, 23, 42, 0.45);
   display: flex;
   justify-content: flex-end;
+  align-items: stretch;
+  backdrop-filter: blur(4px);
 }
 
 .mobileMenuPanel {
-  width: 320px;
+  width: min(100vw, 360px);
   height: 100%;
-  background: rgba(255, 255, 255, 0.92);
+  max-height: 100dvh;
+  background: #fff;
   backdrop-filter: blur(18px);
   border-left: 1px solid rgba(31, 41, 55, 0.08);
-  box-shadow: -24px 0 60px rgba(15, 23, 42, 0.16);
-  padding: 16px;
+  box-shadow: -24px 0 60px rgba(15, 23, 42, 0.2);
+  padding: 20px 16px 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  animation: slideIn 0.22s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0.96;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.mobileMenuHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(31, 41, 55, 0.08);
+}
+
+.mobileMenuTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.mobileMenuClose {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(31, 41, 55, 0.1);
+  background: #f9fafb;
+  color: #374151;
+}
+
+.mobileMenuClose:hover {
+  background: #fff1e8;
+  border-color: rgba(249, 115, 22, 0.35);
+  color: #f97316;
 }
 
 .mobileNav {
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 
 .mobileNavLink {
   display: flex;
   align-items: center;
-  padding: 12px 12px;
-  border-radius: 16px;
+  padding: 14px 16px;
+  border-radius: 14px;
   color: #111827;
   font-weight: 600;
-  background: #fff;
-  border: 1px solid rgba(31, 41, 55, 0.08);
+  font-size: 15px;
+  background: #f9fafb;
+  border: 1px solid rgba(31, 41, 55, 0.06);
 }
 
 .mobileNavLink:hover {

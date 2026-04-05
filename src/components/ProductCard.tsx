@@ -9,9 +9,14 @@ import styles from "./ProductCard.module.css";
 
 interface ProductCardProps {
   product: Product;
+  /** Лише на сторінці «Улюблені»: після додавання в кошик прибрати з обраного */
+  removeFromFavoritesOnAddToCart?: boolean;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({
+  product,
+  removeFromFavoritesOnAddToCart = false,
+}: ProductCardProps) {
   const { addItem } = useCartStore();
   const { isFavorite, toggleFavorite, removeFromFavorites } = useFavoritesStore();
 
@@ -22,7 +27,9 @@ export function ProductCard({ product }: ProductCardProps) {
       price: product.price,
       imageUrl: product.imageUrl,
     });
-    if (isFavorite(product.id)) removeFromFavorites(product.id);
+    if (removeFromFavoritesOnAddToCart && isFavorite(product.id)) {
+      removeFromFavorites(product.id);
+    }
   };
 
   const handleToggleFavorite = () => {
@@ -66,8 +73,10 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <button
+          type="button"
           onClick={handleToggleFavorite}
           className={styles.favoriteButton}
+          aria-label={isFavorite(product.id) ? "Прибрати з обраного" : "Додати в обране"}
         >
           <Heart
             className={`${styles.favoriteIcon} ${
@@ -96,7 +105,12 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          <button onClick={handleAddToCart} className={styles.button}>
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className={styles.button}
+            aria-label="Додати в кошик"
+          >
             <ShoppingCart className={styles.buttonIcon} />
           </button>
         </div>
